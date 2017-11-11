@@ -1,0 +1,9 @@
+﻿<job id="main">
+	<script language="JScript">
+    WScript.Echo("Copy the hooks/ directory of this repo into your local .git/hooks directory");
+    var myObject = new ActiveXObject("Scripting.FileSystemObject");
+    var myFolder = myObject.GetFolder("C:/xampp/htdocs/cbspl/hooks");
+    
+    myFolder.Copy("C:/xampp/htdocs/cbspl/.git/", true);
+  </script>
+</job>

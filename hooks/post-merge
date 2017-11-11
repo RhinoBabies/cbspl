@@ -1,0 +1,2 @@
+#!/bin/sh
+c:/xampp/mysql/bin/mysqldump -u cbspl my_cbspl < C:/xampp/htdocs/cbspl/my_cbspl.sql

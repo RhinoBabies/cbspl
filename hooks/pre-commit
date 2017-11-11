@@ -1,0 +1,4 @@
+#!/bin/sh
+c:/xampp/mysql/bin/mysqldump -u cbspl --skip-extended-insert my_cbspl > C:/xampp/htdocs/cbspl/my_cbspl.sql
+cd C:/xampp/htdocs/cbspl
+git add my_cbspl.sql
