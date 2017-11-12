@@ -98,6 +98,7 @@ CREATE TABLE `pl_user` (
 LOCK TABLES `pl_user` WRITE;
 /*!40000 ALTER TABLE `pl_user` DISABLE KEYS */;
 INSERT INTO `pl_user` VALUES ('Justin','j005@csusm.edu','Password','2017-11-06');
+INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','wololo','2017-11-12');
 /*!40000 ALTER TABLE `pl_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -110,4 +111,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-11 14:10:51
+-- Dump completed on 2017-11-12 15:09:19
