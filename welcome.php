@@ -21,10 +21,9 @@ You typed in the password: "<?php echo $_POST["password"]; ?>"<br><br>
 <a href="addBook.php">Add a Book</a><br><br>
 
 <?php
-	if($db_conn->logged_in == true) //update user_login_date in table pl_User upon successful login
+	if($db_conn->get_logged_in() == true) //update user_login_date in table pl_User upon successful login
 	{
 		echo "You are logged in!<br><br>";
-        $db_conn->update_user_login_date();
 	}
 ?>
 

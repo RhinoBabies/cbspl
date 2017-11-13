@@ -32,7 +32,7 @@ th {
 
 <img src="logo.png" width=100>
 
-<br>Adding basic PHP capabilities...<br><br>
+<br><hr><br>
 
 <!-- PRODUCT BACKLOG -->
 
@@ -57,9 +57,9 @@ Product Backlog
 <br><br>
 <form action="welcome.php" method="post">
   <u>Login</u><br>
-  Name: <input type="text" name="name"><br>
-  E-mail: <input type="text" name="email"><br>
-  Password: <input type="text" name="password"><br>
+  Name: <input type="text" placeholder="Enter your username" name="name"><br>
+  E-mail: <input type="email" placeholder="Enter your e-mail" name="email"><br>
+  Password: <input type="password" placeholder="Enter your password" name="password"><br>
   <input type="submit" value="Login">
 </form>
 
