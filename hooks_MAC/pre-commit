@@ -1,0 +1,4 @@
+#!/bin/bash
+/Applications/MAMP/Library/bin/mysqldump -u cbspl --skip-extended-insert my_cbspl > /Applications/MAMP/htdocs/cbspl/my_cbspl.sql
+cd /Applications/MAMP/htdocs/cbspl
+git add my_cbspl.sql
