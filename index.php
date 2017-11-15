@@ -48,17 +48,12 @@ Product Backlog
 <br><br>
 <form action="welcome.php" method="post">
   <u>Login</u><br>
-  Name: <input type="text" placeholder="Enter your username" name="name"><br>
-  E-mail: <input type="email" placeholder="Enter your e-mail" name="email"><br>
-  Password: <input type="password" placeholder="Enter your password" name="password"><br>
+  Name: <input type="text" placeholder="Enter your username" name="name" maxlength="15"><br>
+  E-mail: <input type="email" placeholder="Enter your e-mail" name="email" maxlength="30"><br>
+  Password: <input type="password" placeholder="Enter your password" name="password" maxlength="32"><br>
   <input type="submit" value="Login">
 </form>
 
 </body>
 
 </html>
-
-
-
-
-

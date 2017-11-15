@@ -11,6 +11,7 @@
 		
 		private $logged_in; //status of the website user; updates when logging in with username/password match
 
+
 		/*	(public) function __construct()
 
 			Parameters: none
@@ -74,7 +75,7 @@
 		{
 			echo "Listing all users... <br>";
 
-			$sql = "SELECT * FROM pl_User";
+			$sql = "SELECT * FROM pl_user";
 			$result = $this->conn->query($sql);
 
 			if($result->num_rows > 0) {
@@ -103,7 +104,7 @@
 			echo "Trying to login with " . $username . " and " . $password . "...<br>";
 
 			//Run SQL query that checks username against password
-			$sql = "SELECT * FROM pl_User WHERE Username = \"" . $username . "\" AND Password = \"" . $password . "\"";
+			$sql = "SELECT * FROM pl_user WHERE Username = \"" . $username . "\" AND Password = \"" . $password . "\"";
 			$result = $this->conn->query($sql);
 
 			//If there are any results, password was matched
@@ -143,14 +144,14 @@
 
 			if ($result->num_rows > 0) {
 				$row = $result->fetch_row();
-				printf("Last Login Date was: %s", $row[0]);
+				printf("Last Login Date was: %s<br>", $row[0]);
 				$result->close();
 			}
 			else
 				echo "Error printing last_login_date!<br>";
 
 			//Run SQL query that will update the user's current last_login_date to today's date
-			$sql = "UPDATE `my_cbspl`.`pl_User` SET `LastLoginDate` = CURRENT_DATE() WHERE `pl_User`.`Username` = '" . $username . "'";
+			$sql = "UPDATE `my_cbspl`.`pl_user` SET `LastLoginDate` = CURRENT_DATE() WHERE `pl_user`.`Username` = '" . $username . "'";
 			$this->conn->query($sql);
 		}
 
