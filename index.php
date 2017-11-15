@@ -4,15 +4,6 @@
 
 <title>PeerLibrary | Give, Barter, or Sell Your Used Textbooks</title>
 
-<?php
-	/*	index.php is the main landing page for the website. Even without navigating to index.php, this page will be loaded
-		by default when going to just https://cbspl.altervista.org. Its contents are now just for testing certain things
-		within PHP and passing information to another page.
-	
-	*/
-	include("class_lib.php");
-?>
-
 <style>
 table, th, td {
     border: 1px solid black;

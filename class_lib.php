@@ -1,5 +1,4 @@
 <?php
-
 	//Handles user logins and password checking
 	class db_connection
 	{ //connection to the database
@@ -57,17 +56,13 @@
 
 			$this->list_all_users();
 
-			$this->login($username, $password);
+			$valid_user = $this->login($username, $password);
 
 			$this->conn->close();
+
+			return $valid_user;
 		}
-
-
-		private function add_a_book($isbn, $title, $author)
-		{
-
-		}
-
+		
 
 		/*	private function list_all_users()
 
@@ -126,9 +121,8 @@
 				echo "Matched " . $row["Username"] . "<br>";
 				$this->set_logged_in(true);
 				$this->update_user_login_date($username);
+				return true;
 			}
-
-			echo "<br><hr><br>";
 		}
 
 		private function set_logged_in($value)
