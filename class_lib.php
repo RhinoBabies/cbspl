@@ -1,5 +1,4 @@
 <?php
-
 	//Handles user logins and password checking
 	class db_connection
 	{ //connection to the database
@@ -11,6 +10,7 @@
 		private $conn; //active mysql connection; SQL queries are sent here and return results
 		
 		private $logged_in; //status of the website user; updates when logging in with username/password match
+
 
 		/*	(public) function __construct()
 
@@ -46,26 +46,22 @@
 
 			if ($result->num_rows > 0) {
 				$row = $result->fetch_row();
-				printf("Default database is %s.\n<br>", $row[0]);
+				//printf("Default database is %s.\n<br>", $row[0]);
 				$result->close();
 			}
-			else
-				echo "Did not connect to any database...<br>";
+			//else
+			//	echo "Did not connect to any database...<br>";
 
-			echo "<br><hr><br>";
+			//echo "<br><hr><br>";
 
 
-			$this->list_all_users();
+			//$this->list_all_users();
 
-			$this->login($username, $password);
+			$valid_user = $this->login($username, $password);
 
 			$this->conn->close();
-		}
 
-
-		private function add_a_book($isbn, $title, $author)
-		{
-
+			return $valid_user;
 		}
 
 
@@ -105,7 +101,7 @@
 		private function login($username, $password)
 		{
 			$password_match = false;
-			echo "Trying to login with " . $username . " and " . $password . "...<br>";
+			//echo "Trying to login with " . $username . " and " . $password . "...<br>";
 
 			//Run SQL query that checks username against password
 			$sql = "SELECT * FROM pl_User WHERE Username = \"" . $username . "\" AND Password = \"" . $password . "\"";
@@ -118,28 +114,33 @@
 				}
 			}
 			else
-				echo "There was an error with the username and/or password.<br>";
+			{
+				//echo "There was an error with the username and/or password.<br>";
+				return false;
+			}
 
 			//On a password match, update the logged_in flag and user_login_date
 			if($password_match == true)
 			{
-				echo "Matched " . $row["Username"] . "<br>";
+				//echo "Matched " . $row["Username"] . "<br>";
 				$this->set_logged_in(true);
 				$this->update_user_login_date($username);
+				return true;
 			}
+		} //end of login()
 
-			echo "<br><hr><br>";
-		}
 
 		private function set_logged_in($value)
 		{
 			$this->logged_in = $value;
 		}
 
+
 		public function get_logged_in()
 		{
 			return $this->logged_in;
 		}
+
 
 		private function update_user_login_date($username)
 		{
@@ -149,11 +150,11 @@
 
 			if ($result->num_rows > 0) {
 				$row = $result->fetch_row();
-				printf("Last Login Date was: %s", $row[0]);
+			//	printf("Last Login Date was: %s", $row[0]);
 				$result->close();
 			}
-			else
-				echo "Error printing last_login_date!<br>";
+			//else
+			//	echo "Error printing last_login_date!<br>";
 
 			//Run SQL query that will update the user's current last_login_date to today's date
 			$sql = "UPDATE `my_cbspl`.`pl_User` SET `LastLoginDate` = CURRENT_DATE() WHERE `pl_User`.`Username` = '" . $username . "'";
