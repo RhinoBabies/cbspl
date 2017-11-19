@@ -1,5 +1,9 @@
 <?php
+	include ("class_lib.php");
 	session_start();
+
+	$db_conn = $_SESSION["db_conn"];
+	$db_conn->logout_db();
 
 	// Unset all of the session variables.
 	$_SESSION = array();

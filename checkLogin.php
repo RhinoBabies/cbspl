@@ -1,10 +1,7 @@
 <?php
-//=======================//=======================//
-//session_start() must come before any HTML code!!//
-//=======================//=======================//
-	session_start();
-
   include("class_lib.php"); 
+
+  session_start();
 
   $db_conn = new db_connection();
   $is_valid_user = $db_conn->check_user_credentials($_POST["name"], $_POST["password"]);
@@ -13,6 +10,7 @@
   {
   	//set session variables for username to remember their log-in information
   	$_SESSION["user"] = $_POST["name"];
+    $_SESSION["db_conn"] = $db_conn;
   	header('Location: logged_in_homepage.php');
   	exit();
   }

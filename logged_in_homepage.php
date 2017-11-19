@@ -1,4 +1,5 @@
 <?php
+  include("class_lib.php"); 
   session_start();
 ?>
 <!DOCTYPE html>
@@ -21,9 +22,9 @@
       <nav>
         <ul>
           <li class="current"><a href="logged_in_homepage.php">Home</a></li>
-          <li><a href="booknook.html">Nook</a></li>
-          <li><a href="watchlist.html">Watchlist</a></li>
-          <li><a href="account.html">Account</a></li>
+          <li><a href="booknook.php">Nook</a></li>
+          <li><a href="watchlist.php">Watchlist</a></li>
+          <li><a href="account.php">Account</a></li>
           <li><a href="logout.php">Log Out</a></li>
         </ul>
       </div>
@@ -57,7 +58,7 @@
         </aside>
 
         <article id="main-col2">
-          <h1 class="page-title"><? echo $_SESSION["user"]; ?>'s Recent Searches/Watchlist</h1>
+          <h1 class="page-title"><?php echo $_SESSION["user"]; ?>'s Recent Searches/Watchlist</h1>
             <div>
               <a href="bookinformation.html"><img src="./images/Cookie Barney Software, LLC..jpg"></a>
               <a href="bookinformation.html"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></a>

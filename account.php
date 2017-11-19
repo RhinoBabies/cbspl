@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -17,11 +20,11 @@
         </div>
       <nav>
         <ul>
-          <li><a href="logged_in_homepage.html">Home</a></li>
-          <li><a href="booknook.html">Nook</a></li>
-          <li><a href="watchlist.html">Watchlist</a></li>
-          <li class="current"><a href="account.html">Account</a></li>
-          <li><a href="homepage.html">Log Out</a></li>
+          <li><a href="logged_in_homepage.php">Home</a></li>
+          <li><a href="booknook.php">Nook</a></li>
+          <li><a href="watchlist.php">Watchlist</a></li>
+          <li class="current"><a href="account.php">Account</a></li>
+          <li><a href="logout.php">Log Out</a></li>
         </ul>
       </div>
       </nav>
