@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -6,7 +9,7 @@
     <meta name="description" content="Easier way to trade and sell textbooks">
     <meta name="keywords" content="web seller, affordable textbooks, peer-to-peer selling">
     <meta name="author" content="Cookie Barney Software">
-    <title>Peer Library | Nook </title>
+    <title>Peer Library | Watchlist </title>
     <link rel="stylesheet" href="./css/style.css">
   </head>
   <body>
@@ -17,11 +20,11 @@
         </div>
       <nav>
         <ul>
-          <li><a href="logged_in_homepage.html">Home</a></li>
-          <li class="current"><a href="booknook.html">Nook</a></li>
-          <li><a href="watchlist.html">Watchlist</a></li>
-          <li><a href="account.html">Account</a></li>
-          <li><a href="homepage.html">Log Out</a></li>
+          <li><a href="logged_in_homepage.php">Home</a></li>
+          <li><a href="booknook.php">Nook</a></li>
+          <li class="current"><a href="watchlist.php">Watchlist</a></li>
+          <li><a href="account.php">Account</a></li>
+          <li><a href="logout.php">Log Out</a></li>
         </ul>
       </div>
       </nav>
@@ -40,7 +43,7 @@
     </section>
 
       <article id="main-col2">
-          <h1 class="page-title">Book Nook</h1>
+          <h1 class="page-title">Watchlist</h1>
             <div>
               <a href="bookinformation.html"><img src="./images/Cookie Barney Software, LLC..jpg"></a>
               <a href="bookinformation.html"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></a>
@@ -57,13 +60,10 @@
               <a href="bookinformation.html"><img src="./images/Cookie Barney Software, LLC..jpg"></a>
               <a href="bookinformation.html"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></a>
             </div>
-        </article>
-        <article id="main-col2">
-          <div id="add">
-            <button class="button1" type="submit"><a href="addbook.html">Add Book to Nook</a></button>
-          </div>
         </article>
 
+      </div>
+    </section>
 
     <div style="clear: both"></div>
     <footer>

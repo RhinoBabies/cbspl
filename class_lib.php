@@ -1,5 +1,4 @@
 <?php
-
 	//Handles user logins and password checking
 	class db_connection
 	{ //connection to the database
@@ -8,9 +7,11 @@
 		private $db_password; //password for that user account to connect
 		private $db_name; //name of the specific database to which we are connecting
 		
-		private $conn; //active mysql connection; SQL queries are sent here and return results
+		private $conn; //active mysql connection; SQL queries are sent here and it returns results
 		
 		private $logged_in; //status of the website user; updates when logging in with username/password match
+		private $valid_username;
+
 
 		/*	(public) function __construct()
 
@@ -46,26 +47,28 @@
 
 			if ($result->num_rows > 0) {
 				$row = $result->fetch_row();
-				printf("Default database is %s.\n<br>", $row[0]);
+				//printf("Default database is %s.\n<br>", $row[0]);
 				$result->close();
 			}
-			else
-				echo "Did not connect to any database...<br>";
+			//else
+			//	echo "Did not connect to any database...<br>";
 
-			echo "<br><hr><br>";
+			//echo "<br><hr><br>";
 
 
-			$this->list_all_users();
+			//$this->list_all_users();
 
-			$this->login($username, $password);
+			$valid_user = $this->login($username, $password);
 
-			$this->conn->close();
+			//$this->conn->close();
+
+			return $valid_user;
 		}
 
 
-		private function add_a_book($isbn, $title, $author)
+		public function logout_db()
 		{
-
+			$this->conn->close();
 		}
 
 
@@ -105,7 +108,7 @@
 		private function login($username, $password)
 		{
 			$password_match = false;
-			echo "Trying to login with " . $username . " and " . $password . "...<br>";
+			//echo "Trying to login with " . $username . " and " . $password . "...<br>";
 
 			//Run SQL query that checks username against password
 			$sql = "SELECT * FROM pl_User WHERE Username = \"" . $username . "\" AND Password = \"" . $password . "\"";
@@ -118,28 +121,34 @@
 				}
 			}
 			else
-				echo "There was an error with the username and/or password.<br>";
+			{
+				//echo "There was an error with the username and/or password.<br>";
+				return false;
+			}
 
 			//On a password match, update the logged_in flag and user_login_date
 			if($password_match == true)
 			{
-				echo "Matched " . $row["Username"] . "<br>";
+				//echo "Matched " . $row["Username"] . "<br>";
 				$this->set_logged_in(true);
 				$this->update_user_login_date($username);
+				$this->valid_username = $username;
+				return true;
 			}
+		} //end of login()
 
-			echo "<br><hr><br>";
-		}
 
 		private function set_logged_in($value)
 		{
 			$this->logged_in = $value;
 		}
 
+
 		public function get_logged_in()
 		{
 			return $this->logged_in;
 		}
+ 
 
 		private function update_user_login_date($username)
 		{
@@ -149,16 +158,87 @@
 
 			if ($result->num_rows > 0) {
 				$row = $result->fetch_row();
-				printf("Last Login Date was: %s", $row[0]);
+			//	printf("Last Login Date was: %s", $row[0]);
 				$result->close();
 			}
-			else
-				echo "Error printing last_login_date!<br>";
+			//else
+			//	echo "Error printing last_login_date!<br>";
 
 			//Run SQL query that will update the user's current last_login_date to today's date
 			$sql = "UPDATE `my_cbspl`.`pl_User` SET `LastLoginDate` = CURRENT_DATE() WHERE `pl_User`.`Username` = '" . $username . "'";
 			$this->conn->query($sql);
 		}
+
+
+		public function list_my_books()
+		{
+			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
+			$sql = "SELECT `ISBN_10_Added`,`Condition`,`Cost`,`SellType` FROM `pl_adds` WHERE Username = '" . $this->valid_username . "'";
+
+			$result = $this->conn->query($sql);
+
+			$firstBook = true; //HTML output changes for books after the first
+
+			if($result->num_rows > 0)
+			{
+				echo "You have " . $result->num_rows . " books posted!<br><br>";
+
+				while($row = $result->fetch_assoc())
+				{
+					$isbn10 = $row["ISBN_10_Added"];
+					$condition = $row["Condition"];
+					$sellType = $row["SellType"];
+					if($sellType == 3)
+						$cost = $row["Cost"];
+					else
+						$cost = "FREE!";
+
+					if(!$firstBook)
+						echo "<article id=\"main-col2\">\n";
+					else
+						$firstBook = false;
+
+					echo "<div><a href='bookinformation.html'><img src='./images/covers/" . $isbn10 . ".jpg' onerror=\"this.src='./images/covers/nocover.jpg';\" /></a>\n";
+					echo "</div>\n</article>\n";
+				}
+			}
+			else
+			{
+				echo "<p>You haven't added any books yet... <br>Help other students save money by <a href='addBook.php'>Adding a Book</a> now!</p>";
+				echo "</article>";
+			}
+		} //end of list_my_books()
+
+		public function add_book_to_nook($isbn, $title, $author, $condition, $gbsVal, $cost)
+		{
+			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
+
+			//check for book in pl_book table; if it's not there, it must be added first
+			/*
+			$sql = "SELECT * FROM `pl_book` WHERE `ISBN_10` = '" . $isbn . "' ";
+
+			$result = $this->conn->query($sql);
+			if($result->num_rows > 0)
+				//book is already in the table;
+			else
+				//parse ISBN db for information here or on form?
+				//add book to pl_book
+
+			$result->close();
+			*/
+
+			//then add book to pl_adds table with username
+
+			$sql = "INSERT INTO `pl_adds` (`Username`, `ISBN_10_Added`, `Condition`, `Cost`, `SellType`) VALUES ('". $this->valid_username . "', '" . $isbn . "', '". $condition . "', '" . $cost . "', '" . $gbsVal . "')";
+
+			if($this->conn->query($sql) === TRUE)
+			{
+				return true;
+			}
+			else
+				return false;
+		} //end of add_book_to_nook()
+
 
 	} //end of class db_connection
 ?>

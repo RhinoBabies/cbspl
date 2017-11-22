@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -17,9 +20,9 @@
         </div>
       <nav>
         <ul>
-          <li><a href="homepage.html">Home</a></li>
+          <li><a href="index.html">Home</a></li>
           <li><a href="about.html">About</a></li>
-          <li class="current"><a href="log_in.html">Log In</a></li>
+          <li class="current"><a href="">Log In</a></li>
         </ul>
       </div>
       </nav>
@@ -27,18 +30,25 @@
 
   <section id="main">
     <article id="login">
+      <?php
+        if(!empty($_SESSION["login_error"]))
+        {
+          echo "<font color='red'><b>" . $_SESSION["login_error"] . "</b></font>";
+          unset($_SESSION["login_error"]);
+        }
+      ?>
       <div class="dark">
         <h3>Log In</h3>
-          <form class="log_in">
+          <form class="log_in" method="post" action="checkLogin.php">
           <div>
             <label>Username</label><br>
-            <input type="text" placeholder="Username">
+            <input type="text" placeholder="Username" name="name" required autofocus>
           </div>
           <div>
             <label>Password</label><br>
-            <input type="password" placeholder="Password">
+            <input type="password" placeholder="Password" name="password" required>
           </div>
-          <button class="button1" type="submit"><a href="logged_in_homepage.html">Log In</a></button>
+          <button class="button1" type="submit">Log In</button>
         </form>
       </div>
     </article>
@@ -49,15 +59,15 @@
           <form class="sign_up">
             <div>
               <label>Email</label><br>
-              <input type="email" placeholder="Email">
+              <input type="email" placeholder="Email" name="email" required>
             </div>
             <div>
               <label>Username</label><br>
-              <input type="text" placeholder="Username">
+              <input type="text" placeholder="Username" name="name" required>
             </div>
             <div>
               <label>Password</label><br>
-              <input type="password" placeholder="Password">
+              <input type="password" placeholder="Password" name="password" required>
             </div>
             <button class="button1" type="submit"><a href="logged_in_homepage.html">Sign Up</a></button>
           </form>

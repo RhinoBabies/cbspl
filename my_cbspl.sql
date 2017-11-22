@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `pl_adds`;
 CREATE TABLE `pl_adds` (
   `Username` varchar(15) NOT NULL,
   `ISBN_10_Added` varchar(10) NOT NULL,
-  `Quality` varchar(15) NOT NULL,
+  `Condition` varchar(15) NOT NULL,
   `Cost` decimal(5,2) DEFAULT NULL,
   `SellType` int(1) NOT NULL,
   PRIMARY KEY (`Username`,`ISBN_10_Added`),
@@ -41,7 +41,12 @@ CREATE TABLE `pl_adds` (
 
 LOCK TABLES `pl_adds` WRITE;
 /*!40000 ALTER TABLE `pl_adds` DISABLE KEYS */;
+INSERT INTO `pl_adds` VALUES ('Justin','0321563840','Like New',0.00,1);
+INSERT INTO `pl_adds` VALUES ('Justin','1234567890','poor',NULL,1);
 INSERT INTO `pl_adds` VALUES ('Justin','1234657890','Mint',199.99,2);
+INSERT INTO `pl_adds` VALUES ('Justin','4567981320','fair',NULL,1);
+INSERT INTO `pl_adds` VALUES ('Kurt','1234657890','excellent',60.00,3);
+INSERT INTO `pl_adds` VALUES ('Kurt','4567981320','excellent',40.00,3);
 /*!40000 ALTER TABLE `pl_adds` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -69,7 +74,10 @@ CREATE TABLE `pl_book` (
 
 LOCK TABLES `pl_book` WRITE;
 /*!40000 ALTER TABLE `pl_book` DISABLE KEYS */;
+INSERT INTO `pl_book` VALUES ('0321563840','9780321563842','The C++ Programming Language',NULL,'Bjarne Stroustrup','4');
+INSERT INTO `pl_book` VALUES ('1234567890',NULL,'Baking Cookies with Barney','Cooking','Barney','1');
 INSERT INTO `pl_book` VALUES ('1234657890',NULL,'My favorite book',NULL,'Who knows',NULL);
+INSERT INTO `pl_book` VALUES ('1491918667','9781491918661','Learning PHP, MySQL & Javascri','Computers','Robin Nixon','4');
 INSERT INTO `pl_book` VALUES ('4567981320',NULL,'Someone\'s book',NULL,'John Smith',NULL);
 /*!40000 ALTER TABLE `pl_book` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -97,10 +105,8 @@ CREATE TABLE `pl_user` (
 
 LOCK TABLES `pl_user` WRITE;
 /*!40000 ALTER TABLE `pl_user` DISABLE KEYS */;
-INSERT INTO `pl_user` VALUES ('Justin','j005@csusm.edu','Password','2017-11-13');
+INSERT INTO `pl_user` VALUES ('Justin','j005@csusm.edu','Password','2017-11-18');
 INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','wololo','2017-11-12');
-INSERT INTO `pl_user` VALUES ('Newuser','newsies@some.com','qwerty','2017-11-13');
-INSERT INTO `pl_user` VALUES ('testSubject','abc@abc.com','12345','2017-11-13');
 /*!40000 ALTER TABLE `pl_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -113,4 +119,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-15 12:30:54
+-- Dump completed on 2017-11-18 17:00:17

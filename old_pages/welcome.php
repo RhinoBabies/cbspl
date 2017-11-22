@@ -1,3 +1,9 @@
+<?php
+//=======================//=======================//
+//session_start() must come before any HTML code!!//
+//=======================//=======================//
+	session_start();
+?>
 <html>
 <head>
 <title>PeerLibrary | Welcome!</title>
