@@ -1,5 +1,10 @@
 <?php
   session_start();
+  if(empty($_SESSION["user"]))
+  {
+    $_SESSION["login_error"] = "You must be logged in to view that page.<br>";
+    header("Location: ./log_in.php");
+  }
 ?>
 <!DOCTYPE html>
 <html>
