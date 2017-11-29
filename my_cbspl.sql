@@ -98,7 +98,7 @@ CREATE TABLE `pl_user` (
 LOCK TABLES `pl_user` WRITE;
 /*!40000 ALTER TABLE `pl_user` DISABLE KEYS */;
 INSERT INTO `pl_user` VALUES ('Justin','j005@csusm.edu','Password','2017-11-14');
-INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','wololo','2017-11-27');
+INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','wololo','2017-11-29');
 INSERT INTO `pl_user` VALUES ('Newuser','newsies@some.com','qwerty','2017-11-13');
 INSERT INTO `pl_user` VALUES ('testSubject','abc@abc.com','12345','2017-11-13');
 /*!40000 ALTER TABLE `pl_user` ENABLE KEYS */;
@@ -113,4 +113,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-27 18:27:09
+-- Dump completed on 2017-11-29 15:51:35

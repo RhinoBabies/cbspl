@@ -48,6 +48,7 @@
             <label>Password</label><br>
             <input type="password" placeholder="Password" name="password" required>
           </div>
+          <br>
           <button class="button1" type="submit">Log In</button>
         </form>
       </div>
@@ -56,7 +57,7 @@
       <article id="signup">
         <div class="dark">
           <h3>Sign Up</h3>
-          <form class="sign_up">
+          <form class="sign_up" method="post" action="sendVerification.php">
             <div>
               <label>Email</label><br>
               <input type="email" placeholder="Email" name="email" required>
@@ -69,7 +70,12 @@
               <label>Password</label><br>
               <input type="password" placeholder="Password" name="password" required>
             </div>
-            <button class="button1" type="submit"><a href="logged_in_homepage.html">Sign Up</a></button>
+            <div>
+              <label>Confirm Password</label><br>
+              <input type="password" placeholder="Confirm Password" name="passConfirm" required>
+            </div>
+            <br>
+            <button class="button1" type="submit"><!-- <a href="logged_in_homepage.html">Sign Up</a>-->Sign Up</button>
           </form>
         </div>
       </article>
