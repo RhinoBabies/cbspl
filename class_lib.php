@@ -31,13 +31,14 @@
 
 		/*	public function check_user_credentials($username, $password)
 
-			Parameters: $username (string) - gets $_POST'd upon a user logging into the main landing page
+			Parameters: &$username (string) - gets $_POST'd upon a user logging into the main landing page
+							becomes the username from table if it is passed as the e-mail address
 						$password (string) - same as $username
 
 			Creates a connection to the database server using the "cbspl" username on the "localhost" server. There is no password; this may be unsecure, but should be okay for our current purposes.
 			Changes the default database to "my_cbspl" after connecting, 
 		*/
-		public function check_user_credentials($username, $password)
+		public function check_user_credentials(&$username, $password)
 		{
 			//Create connection to database
 			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
@@ -100,12 +101,13 @@
 		/*	private function login($username, $password)
 			
 			Parameters:
-				$username (string) - passed in from the main check_user_credentials(...) method, which had $username and $password input from the HTML form on the login page and $_POST'ed through
+				&$username (string) - passed in from the main check_user_credentials(...) method, which had $username and $password input from the HTML form on the login page and $_POST'ed through
+					gets changed to username from table if it is passed as the e-mail address
 				$password (string) - same as $username
 			
 			Login to the database with the $username and $password. SQL statement checks the database for a specific match. Assuming there is only one case where the $username and $password match, since username is a primary key to the pl_user table (therefore, is unique across all usernames), then return true for the $password_match. When password is matched, set $logged_in flag to true.
 		*/
-		private function login($username, $password)
+		private function login(&$username, $password)
 		{
 			$password_match = false;
 			//echo "Trying to login with " . $username . " and " . $password . "...<br>";
@@ -120,10 +122,19 @@
 					$password_match = true;
 				}
 			}
-			else
+			else // password did not match username
 			{
-				//echo "There was an error with the username and/or password.<br>";
-				return false;
+				// Check e-mail address against password
+				$sql = "SELECT * FROM pl_user WHERE Email = \"" . $username . "\" AND Password = \"" . $password . "\"";
+				$result = $this->conn->query($sql);
+
+				if ($result->num_rows > 0) {
+					$row = $result->fetch_assoc();
+					$username = $row["Username"];
+					$password_match = true;
+				}
+				else // password did not match e-mail either
+					return false;
 			}
 
 			//On a password match, update the logged_in flag and user_login_date
