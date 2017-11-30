@@ -41,8 +41,8 @@
         <h3>Log In</h3>
           <form class="log_in" method="post" action="checkLogin.php">
           <div>
-            <label>Username</label><br>
-            <input type="text" placeholder="Username" name="name" required autofocus>
+            <label>Username or E-mail</label><br>
+            <input type="text" placeholder="Username or Email" name="name" required autofocus>
           </div>
           <div>
             <label>Password</label><br>

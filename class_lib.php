@@ -181,44 +181,86 @@
 		}
 
 
-		public function list_my_books()
+		public function list_my_books($output_num = 0)
 		{
 			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
 			$sql = "SELECT `ISBN_10_Added`,`Condition`,`Cost`,`SellType` FROM `pl_adds` WHERE Username = '" . $this->valid_username . "'";
 
 			$result = $this->conn->query($sql);
 
-			$firstBook = true; //HTML output changes for books after the first
-
-			if($result->num_rows > 0)
+			if($result->num_rows > 0) //there are books posted by this user
 			{
-				echo "You have " . $result->num_rows . " books posted!<br><br>";
+				$bFirstBook = true; //passed to properly output HTML on first book listing
 
-				while($row = $result->fetch_assoc())
+				//if no output number is specifed for how many books to print, set output to total books
+				//this happens in the Book Nook
+				if($output_num == 0)
 				{
-					$isbn10 = $row["ISBN_10_Added"];
-					$condition = $row["Condition"];
-					$sellType = $row["SellType"];
-					if($sellType == 3)
-						$cost = $row["Cost"];
+					$output_num = $result->num_rows;
+					if($output_num == 1)
+						echo "You have one book posted!<br><br>";
 					else
-						$cost = "FREE!";
+						echo "You have " . $output_num . " books posted!<br><br>";
+				}
+				else //calling page specifies how many books to output; output is > 0 here
+				{
+					if($output_num == 1) //singular printing; special grammar
+					{
+						echo "Here is your most recent book posting!<br><br>";
+					}
+					else //calling pages is printing more than one; check for total books
+					{
+						if($output_num > $result->num_rows) //limits output of books to actual number posted
+							$output_num = $result->num_rows;
+						echo "Here are your " . $output_num . " most recent book postings!<br><br>";
+					}
+				}
 
-					if(!$firstBook)
-						echo "<article id=\"main-col2\">\n";
-					else
-						$firstBook = false;
+				//now that total books needed to output has been determined, parse their info and print them
+				for($i = 0; $i < $output_num; $i++)
+				{
+					if($row = $result->fetch_assoc())
+					{
+						$book = new Book;
 
-					echo "<div><a href='bookinformation.html'><img src='./images/covers/" . $isbn10 . ".jpg' onerror=\"this.src='./images/covers/nocover.jpg';\" /></a>\n";
-					echo "</div>\n</article>\n";
+						$this->getBookInfo($row, $bFirstBook, $book);
+
+						if($bFirstBook)
+							$bFirstBook = false;
+
+						$this->HTMLforNookEntry($book);
+					}
 				}
 			}
-			else
+			else //there were no results in the SQL query above
 			{
 				echo "<p>You haven't added any books yet... <br>Help other students save money by <a href='addBook.php'>Adding a Book</a> now!</p>";
 				echo "</article>";
 			}
 		} //end of list_my_books()
+
+		private function getBookInfo(&$row, $firstBook, &$book)
+		{
+			$book->isbn10 = $row["ISBN_10_Added"];
+			$book->condition = $row["Condition"];
+			$book->sellType = $row["SellType"];
+
+			if($book->sellType == 3)
+				$book->cost = $row["Cost"];
+			else
+				$book->cost = "FREE!";
+
+			if(!$firstBook)
+				echo "<article id=\"main-col2\">\n";
+			else
+				$firstBook = false;
+		}
+
+		private function HTMLforNookEntry($book)
+		{
+			echo "<div><a href='bookinformation.html'><img src='./images/covers/" . $book->isbn10 . ".jpg' onerror=\"this.src='./images/covers/nocover.jpg';\" /></a>\n";
+			echo "</div>\n</article>\n";
+		}
 
 		public function add_book_to_nook($isbn, $title, $author, $condition, $gbsVal, $cost)
 		{
@@ -252,4 +294,13 @@
 
 
 	} //end of class db_connection
+
+	class Book
+	{
+		public $isbn10;
+		public $title;
+		public $condition;
+		public $sellType;
+		public $cost;
+	}
 ?>
