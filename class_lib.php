@@ -131,7 +131,7 @@
 			if($user_found == true)
 			{
 				// check password
-				if(password_verify($password, $row["Password"])) {
+				if(password_verify($password, $row["Password"]) && $row["Verified"] == true) {
 					$this->set_logged_in(true);
 					$this->update_user_login_date($username);
 					$this->valid_username = $username;
