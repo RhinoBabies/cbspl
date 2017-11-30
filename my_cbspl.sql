@@ -83,11 +83,15 @@ DROP TABLE IF EXISTS `pl_user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pl_user` (
   `Username` varchar(15) NOT NULL,
-  `Email` varchar(30) NOT NULL,
-  `Password` varchar(32) NOT NULL,
+  `EmailReal` varchar(37) NOT NULL,
+  `EmailAnon` varchar(37) NOT NULL,
+  `Password` varchar(60) NOT NULL,
   `LastLoginDate` date NOT NULL,
+  `Verified` tinyint(1) NOT NULL,
   PRIMARY KEY (`Username`),
-  UNIQUE KEY `Email` (`Email`)
+  UNIQUE KEY `Email` (`EmailReal`),
+  UNIQUE KEY `Username` (`Username`),
+  UNIQUE KEY `EmailAnon` (`EmailAnon`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -97,10 +101,10 @@ CREATE TABLE `pl_user` (
 
 LOCK TABLES `pl_user` WRITE;
 /*!40000 ALTER TABLE `pl_user` DISABLE KEYS */;
-INSERT INTO `pl_user` VALUES ('Justin','j005@csusm.edu','Password','2017-11-14');
-INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','wololo','2017-11-29');
-INSERT INTO `pl_user` VALUES ('Newuser','newsies@some.com','qwerty','2017-11-13');
-INSERT INTO `pl_user` VALUES ('testSubject','abc@abc.com','12345','2017-11-13');
+INSERT INTO `pl_user` VALUES ('Justin','j005@csusm.edu','user-Justin@peer-library.org','Password','2017-11-14',0);
+INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','user-Kurt@peer-library.org','$2y$10$KNqKKKn58c7S/oiIPlHK9O.F4cF/7b0dj9WsaU98jleB2l.uhOQ7q','2017-11-30',1);
+INSERT INTO `pl_user` VALUES ('Newuser','newsies@some.com','user-Newuser@peer-library.org','qwerty','2017-11-13',0);
+INSERT INTO `pl_user` VALUES ('testSubject','abc@abc.com','user-testSubject@peer-library.org','12345','2017-11-13',0);
 /*!40000 ALTER TABLE `pl_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -113,4 +117,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-29 15:51:35
+-- Dump completed on 2017-11-30  2:04:30
