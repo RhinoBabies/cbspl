@@ -57,7 +57,8 @@
 		}
 
 
-		public function login_db() {
+		public function login_db()
+		{
 			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
 		}
 
@@ -65,6 +66,11 @@
 		public function logout_db()
 		{
 			$this->conn->close();
+		}
+
+		public function query_db($sql)
+		{
+			$this->conn->query($sql);
 		}
 
 
