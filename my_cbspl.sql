@@ -88,6 +88,7 @@ CREATE TABLE `pl_user` (
   `Password` varchar(60) NOT NULL,
   `LastLoginDate` date NOT NULL,
   `Verified` tinyint(1) NOT NULL,
+  `VerifyCode` varchar(60) NOT NULL,
   PRIMARY KEY (`Username`),
   UNIQUE KEY `Email` (`EmailReal`),
   UNIQUE KEY `Username` (`Username`),
@@ -101,10 +102,10 @@ CREATE TABLE `pl_user` (
 
 LOCK TABLES `pl_user` WRITE;
 /*!40000 ALTER TABLE `pl_user` DISABLE KEYS */;
-INSERT INTO `pl_user` VALUES ('Justin','j005@csusm.edu','user-Justin@peer-library.org','Password','2017-11-14',0);
-INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','user-Kurt@peer-library.org','$2y$10$KNqKKKn58c7S/oiIPlHK9O.F4cF/7b0dj9WsaU98jleB2l.uhOQ7q','2017-11-30',1);
-INSERT INTO `pl_user` VALUES ('Newuser','newsies@some.com','user-Newuser@peer-library.org','qwerty','2017-11-13',0);
-INSERT INTO `pl_user` VALUES ('testSubject','abc@abc.com','user-testSubject@peer-library.org','12345','2017-11-13',0);
+INSERT INTO `pl_user` VALUES ('Justin','j005@csusm.edu','user-Justin@peer-library.org','Password','2017-11-14',0,'');
+INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','user-Kurt@peer-library.org','$2y$10$KNqKKKn58c7S/oiIPlHK9O.F4cF/7b0dj9WsaU98jleB2l.uhOQ7q','2017-11-30',1,'');
+INSERT INTO `pl_user` VALUES ('Newuser','newsies@some.com','user-Newuser@peer-library.org','qwerty','2017-11-13',0,'');
+INSERT INTO `pl_user` VALUES ('testSubject','abc@abc.com','user-testSubject@peer-library.org','12345','2017-11-13',0,'');
 /*!40000 ALTER TABLE `pl_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -117,4 +118,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-30  2:12:59
+-- Dump completed on 2017-11-30 22:01:29

@@ -75,7 +75,7 @@
               <input type="password" placeholder="Confirm Password" name="passConfirm" required>
             </div>
             <br>
-            <button class="button1" type="submit"><!-- <a href="logged_in_homepage.html">Sign Up</a>-->Sign Up</button>
+            <button class="button1" type="submit">Sign Up</button>
           </form>
         </div>
       </article>
