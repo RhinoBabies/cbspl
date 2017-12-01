@@ -47,7 +47,7 @@
         <form>
           <div class="search">
             <input type="search" placeholder="Book Title or ISBN Number">
-            <button class="button1" type="submit"><a href="search_positive.html">Search</a></button>
+            <a href="search_positive.html"><button class="button1" type="submit">Search</button></a>
           </div>
         </form>
       </div>
@@ -88,7 +88,7 @@
         </article>
         <article id="main-col2">
             <div>
-              <button class="button1" type="submit"><a href="watchlist.html">Watchlist</a></button>
+              <a href="watchlist.php"><button class="button1" type="submit">See My Watchlist</button></a>
             </div>
         </article>
 
@@ -97,6 +97,11 @@
           <?php
             $db_conn->list_my_books(3); //can change the argument # to print less/more recent book postings
           ?>
+      <article id="main-col2">
+        <div>
+          <a href="booknook.php"><button class="button1">Go to My Book Nook</button></a>
+        </div>
+      </article>
 
       </div>
     </section>

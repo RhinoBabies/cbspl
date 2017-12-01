@@ -179,6 +179,8 @@
             <div>
               <label>Condition</label><br>
               <?php if(!empty($conditionError)) echo "<font color='red'><b>" . $conditionError . "</b></font>"; ?>
+            </div>
+            <div class="select">
               <select name="condition">
                 <option value="None">None</option>
                 <option value="Like New" <?php if($condition == "Like New") echo "selected";?>>Like New</option>
@@ -186,10 +188,12 @@
                 <option value="Well Used" <?php if($condition == "Well Used") echo "selected";?>>Well Used</option>
                 <option value="Poor" <?php if($condition == "Poor") echo "selected";?>>Poor</option>
               </select>
-              </div>
+            </div>
             <div>
               <label>Selling Option</label><br>
               <?php if(!empty($gbsError)) echo "<font color='red'><b>Please choose an option below.</b></font>"; ?>
+            </div>
+            <div class="select">
               <select name="gbs">
                 <option value="None">None</option>
                 <option value="Give" <?php if($gbs == "Give") echo "selected";?>>Give</option>

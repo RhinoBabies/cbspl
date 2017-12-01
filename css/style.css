@@ -17,14 +17,34 @@ header ul{
   padding:0;
 }
 
-.button1{
-    height: 38px;
-    background: #f9cc68;
-    border: none;
-    padding-left: 20px;
-    padding-right: 20px;
-    color: #000000;
+.button1 {
+  -webkit-border-radius: 18;
+  -moz-border-radius: 18;
+  border-radius: 18px;
+  -webkit-box-shadow: 0px 2px 3px #6e6e6e;
+  -moz-box-shadow: 0px 2px 3px #6e6e6e;
+  box-shadow: 0px 2px 3px #6e6e6e;
+  color: #000000;
+  font-size: 14px;
+  background: #f9cb68;
+  padding: 10px 20px 10px 20px;
+  border: solid #e69900 3px;
+  text-decoration: none;
+  -webkit-transition-duration: 0.2s; /* Safari */
+  transition-duration: 0.2s;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
 
+.button1:hover {
+  background: #ffdea6;
+  text-decoration: none;
+}
+
+.button1:active{
+  background: #ffbb45;
+  box-shadow: 0px 1px 3px #6e6e6e;
+  transform: translateY(2px);
 }
 
 .dark{
@@ -80,6 +100,61 @@ header ul{
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
     background-color: #3e8e41;
+}
+
+/* Reset Select */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
+  box-shadow: none;
+  border: 0 !important;
+  background: #f9cc68;
+  background-image: none;
+}
+/* Custom Select */
+.select {
+  position: relative;
+  display: block;
+  width: 8em;
+  height: 3em;
+  line-height: 3;
+  background: #f9cc68;
+  overflow: hidden;
+  border-radius: .25em;
+}
+select {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  padding-left: 10px;
+  color: #000;
+  cursor: pointer;
+}
+select::-ms-expand {
+  display: none;
+}
+/* Arrow */
+.select::after {
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 3px;
+  background: #f39c12;
+  pointer-events: none;
+}
+/* Transition */
+.select:hover::after {
+  color: #f9cc68;
+}
+.select::after {
+  -webkit-transition: .25s all ease;
+  transition: .25s all ease;
 }
 
 /* Header */
@@ -290,7 +365,7 @@ aside#sidebar .quote input, aside#sidebar .quote textarea,
 #login .log_in input, #login .log_in textarea,
 #signup .sign_up input, #signup .sign_up textarea,
 #account input, #account textarea,
-#information .information input, #information .information select{
+#information .information input, #information .information {
   width: 90%;
   padding: 10px;
 }
