@@ -103,8 +103,7 @@ CREATE TABLE `pl_user` (
 LOCK TABLES `pl_user` WRITE;
 /*!40000 ALTER TABLE `pl_user` DISABLE KEYS */;
 INSERT INTO `pl_user` VALUES ('Justin','j005@csusm.edu','user-Justin@peer-library.org','Password','2017-11-14',0,'');
-INSERT INTO `pl_user` VALUES ('k','a@cougars.csusm.edu','user_k@peer_library.org','$2y$10$IqSthvTl1lxhKMhjZTVxfeRqwCOrqffCq9GK0TkVZu0EQW.RPckoi','2017-12-01',1,'');
-INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','user-Kurt@peer-library.org','$2y$10$KNqKKKn58c7S/oiIPlHK9O.F4cF/7b0dj9WsaU98jleB2l.uhOQ7q','2017-11-30',1,'');
+INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','user-Kurt@peer-library.com','$2y$10$aTWSopDnldz5H1ys6jc0aO0q2lf9m45JOJi3WKk7HddIeeJ5rLs16','0000-00-00',0,'$2y$10$S/nBkuIrK6zotXjtYJxq..cK8uFrJVYNvuvCWgZxsFXEVFN5Ds.aS');
 INSERT INTO `pl_user` VALUES ('Newuser','newsies@some.com','user-Newuser@peer-library.org','qwerty','2017-11-13',0,'');
 INSERT INTO `pl_user` VALUES ('testSubject','abc@abc.com','user-testSubject@peer-library.org','12345','2017-11-13',0,'');
 /*!40000 ALTER TABLE `pl_user` ENABLE KEYS */;
@@ -119,4 +118,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-02 13:53:04
+-- Dump completed on 2017-12-03 15:00:09

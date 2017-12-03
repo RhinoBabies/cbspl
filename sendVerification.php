@@ -16,9 +16,9 @@
 
 
 
-	// ======================
-	// * CHECK AND REDIRECT *
-	// ======================
+	// ================================
+	// * SET ERROR FLAGS AND REDIRECT *
+	// ================================
 
 	// Redirect if passwords do not match
 	if ($password !== $passConfirm) {
@@ -79,14 +79,14 @@
 	$code_stored = password_hash($code, PASSWORD_BCRYPT);
 
 	// Generate anonymous E-mail address
-	$emailanon = 'user_'.$tempname.'@peer_library.org';
+	$emailanon = 'user-'.$tempname.'@'.EMAIL_DOMAIN;
 
 	// Hash password
 	$temppass = password_hash($password, PASSWORD_BCRYPT);
 
 	// Add user
-	$conn->query("INSERT INTO pl_user (Username, EmailReal, EmailAnon, Password)
-		VALUES ('$tempname', '$tempemail', '$emailanon', '$temppass')")
+	$conn->query("INSERT INTO pl_user (Username, EmailReal, EmailAnon, Password, VerifyCode)
+		VALUES ('$tempname', '$tempemail', '$emailanon', '$temppass', '$code_stored')");
 
 
 
@@ -94,6 +94,36 @@
 	// * SEND VERIFICATION E-MAIL *
 	// ============================
 
-	
+	// Send the e-mail to the following address
+	$to = $email;
 
+	// with the following subject line
+	$subject = 'Peer Library - Account Verification';
+
+	// the following message
+	$message = '
+
+Dear '.$username.',<br>
+<br>
+Welcome to Peer Library!<br>
+You can log in with the following credentials after verifying your e-mail address.<br>
+<br>
+--------------------------------------<br>
+Username: '.$username.'<br>
+Password: '.$password.'<br>
+--------------------------------------<br>
+<br>
+To verify your e-mail address, click the link below:<br>
+<a href=\"'.SITE_URL.'/verify.php?name='.$username.'&code='.$code.'\">Verify Account</a><br>
+<br>
+Best wishes,<br>
+Peer Library<br>
+';
+
+	// and the following headers
+	$headers = 'From: noreply@'.EMAIL_DOMAIN."\r\n";
+	$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+	// Send the e-mail
+	mail($to, $subject, $message, $headers);
 ?>
