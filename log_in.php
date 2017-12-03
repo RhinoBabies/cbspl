@@ -114,6 +114,7 @@
                 {
                   echo "* Username already in use";
                   unset($_SESSION["name_exists"]);
+                  unset($_SESSION["name_avail"]);
                 }
                 ?>
               </span>
