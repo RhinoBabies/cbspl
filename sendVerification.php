@@ -126,4 +126,13 @@ Peer Library<br>
 
 	// Send the e-mail
 	mail($to, $subject, $message, $headers);
+
+
+
+	// ===========================
+	// * DISPLAY MESSAGE TO USER *
+	// ===========================
+
+	echo 'Verification e-mail sent to your account.<br>Check your e-mail to verify your account.';
+
 ?>
