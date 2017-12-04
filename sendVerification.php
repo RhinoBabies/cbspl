@@ -75,7 +75,7 @@
 	// ========================
 
 	// Generate activation code
-	$code = random_bytes(72);
+	$code = bin2hex(openssl_random_pseudo_bytes(72));
 	$code_stored = password_hash($code, PASSWORD_BCRYPT);
 
 	// Generate anonymous E-mail address
@@ -88,7 +88,7 @@
 	$conn->query("INSERT INTO pl_user (Username, EmailReal, EmailAnon, Password, VerifyCode)
 		VALUES ('$tempname', '$tempemail', '$emailanon', '$temppass', '$code_stored')");
 
-
+	echo $code;
 
 	// ============================
 	// * SEND VERIFICATION E-MAIL *
