@@ -1,5 +1,10 @@
 <?php
   session_start();
+  //Redirects to the logged_in_homepage if the user is already logged in
+  if(!empty($_SESSION["user"]))
+  {
+    header("Location: ./logged_in_homepage.php");
+  }
 ?>
 <!DOCTYPE html>
 <html>

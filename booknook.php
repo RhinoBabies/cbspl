@@ -1,5 +1,5 @@
 <?php
-  include("class_lib.php"); 
+  include("class_lib.php");
   session_start();
 
   //make sure the user is logged in

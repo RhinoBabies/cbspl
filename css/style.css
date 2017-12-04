@@ -47,6 +47,36 @@ header ul{
   transform: translateY(2px);
 }
 
+.button2 {
+  -webkit-border-radius: 18;
+  -moz-border-radius: 18;
+  border-radius: 18px;
+  -webkit-box-shadow: 0px 2px 3px #6e6e6e;
+  -moz-box-shadow: 0px 2px 3px #6e6e6e;
+  box-shadow: 0px 2px 3px #6e6e6e;
+  color: #000000;
+  font-size: 14px;
+  background: #ff542d;
+  padding: 10px 20px 10px 20px;
+  border: solid #bc2e0f 3px;
+  text-decoration: none;
+  -webkit-transition-duration: 0.2s; /* Safari */
+  transition-duration: 0.2s;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.button2:hover {
+  background: #ff6644;
+  text-decoration: none;
+}
+
+.button2:active{
+  background: #d64322;
+  box-shadow: 0px 1px 3px #6e6e6e;
+  transform: translateY(2px);
+}
+
 .dark{
   padding: 15px;
   background: #8a68f9;
