@@ -31,13 +31,14 @@
 
 		/*	public function check_user_credentials($username, $password)
 
-			Parameters: $username (string) - gets $_POST'd upon a user logging into the main landing page
+			Parameters: &$username (string) - gets $_POST'd upon a user logging into the main landing page
+							becomes the username from table if it is passed as the e-mail address
 						$password (string) - same as $username
 
 			Creates a connection to the database server using the "cbspl" username on the "localhost" server. There is no password; this may be unsecure, but should be okay for our current purposes.
 			Changes the default database to "my_cbspl" after connecting, 
 		*/
-		public function check_user_credentials($username, $password)
+		public function check_user_credentials(&$username, $password)
 		{
 			//Create connection to database
 			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
@@ -47,28 +48,29 @@
 
 			if ($result->num_rows > 0) {
 				$row = $result->fetch_row();
-				//printf("Default database is %s.\n<br>", $row[0]);
 				$result->close();
 			}
-			//else
-			//	echo "Did not connect to any database...<br>";
-
-			//echo "<br><hr><br>";
-
-
-			//$this->list_all_users();
 
 			$valid_user = $this->login($username, $password);
 
-			//$this->conn->close();
-
 			return $valid_user;
+		}
+
+
+		public function login_db()
+		{
+			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
 		}
 
 
 		public function logout_db()
 		{
 			$this->conn->close();
+		}
+
+		public function query_db($sql)
+		{
+			$this->conn->query($sql);
 		}
 
 
@@ -100,41 +102,55 @@
 		/*	private function login($username, $password)
 			
 			Parameters:
-				$username (string) - passed in from the main check_user_credentials(...) method, which had $username and $password input from the HTML form on the login page and $_POST'ed through
+				&$username (string) - passed in from the main check_user_credentials(...) method, which had $username and $password input from the HTML form on the login page and $_POST'ed through
+					gets changed to username from table if it is passed as the e-mail address
 				$password (string) - same as $username
 			
 			Login to the database with the $username and $password. SQL statement checks the database for a specific match. Assuming there is only one case where the $username and $password match, since username is a primary key to the pl_user table (therefore, is unique across all usernames), then return true for the $password_match. When password is matched, set $logged_in flag to true.
 		*/
-		private function login($username, $password)
+		private function login(&$username, $password)
 		{
-			$password_match = false;
-			//echo "Trying to login with " . $username . " and " . $password . "...<br>";
+			// Initialize variables
+			$tempname = $this->conn->real_escape_string($username);
+			$tempname = '\''.$tempname.'\'';
+			$user_found = false;
+			$row;
 
-			//Run SQL query that checks username against password
-			$sql = "SELECT * FROM pl_User WHERE Username = \"" . $username . "\" AND Password = \"" . $password . "\"";
+			//Run SQL query that checks for username
+			$sql = "SELECT * FROM pl_user WHERE Username = $tempname";
 			$result = $this->conn->query($sql);
 
-			//If there are any results, password was matched
+			//If there are any results, username was found
 			if($result->num_rows > 0) {
-				while($row = $result->fetch_assoc()) {
-					$password_match = true;
-				}
+				$row = $result->fetch_assoc();
+				$user_found = true;
 			}
-			else
+			else // username was not found
 			{
-				//echo "There was an error with the username and/or password.<br>";
-				return false;
+				// Run SQL query that checks for e-mail address
+				$sql = "SELECT * FROM pl_user WHERE EmailReal = $tempname";
+				$result = $this->conn->query($sql);
+
+				if ($result->num_rows > 0) {
+					$row = $result->fetch_assoc();
+					$username = $row["Username"]; // change username to actual username
+					$user_found = true;
+				}
 			}
 
 			//On a password match, update the logged_in flag and user_login_date
-			if($password_match == true)
+			if($user_found == true)
 			{
-				//echo "Matched " . $row["Username"] . "<br>";
-				$this->set_logged_in(true);
-				$this->update_user_login_date($username);
-				$this->valid_username = $username;
-				return true;
+				// check password
+				if(password_verify($password, $row["Password"]) && $row["Verified"] == true) {
+					$this->set_logged_in(true);
+					$this->update_user_login_date($username);
+					$this->valid_username = $username;
+					return true;
+				}
 			}
+			else // no match
+				return false;
 		} //end of login()
 
 

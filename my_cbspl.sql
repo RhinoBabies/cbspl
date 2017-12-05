@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `pl_adds`;
 CREATE TABLE `pl_adds` (
   `Username` varchar(15) NOT NULL,
   `ISBN_10_Added` varchar(10) NOT NULL,
-  `Condition` varchar(15) NOT NULL,
+  `Quality` varchar(15) NOT NULL,
   `Cost` decimal(5,2) DEFAULT NULL,
   `SellType` int(1) NOT NULL,
   PRIMARY KEY (`Username`,`ISBN_10_Added`),
@@ -41,12 +41,7 @@ CREATE TABLE `pl_adds` (
 
 LOCK TABLES `pl_adds` WRITE;
 /*!40000 ALTER TABLE `pl_adds` DISABLE KEYS */;
-INSERT INTO `pl_adds` VALUES ('Justin','0321563840','Like New',0.00,1);
-INSERT INTO `pl_adds` VALUES ('Justin','1234567890','poor',NULL,1);
 INSERT INTO `pl_adds` VALUES ('Justin','1234657890','Mint',199.99,2);
-INSERT INTO `pl_adds` VALUES ('Justin','4567981320','fair',NULL,1);
-INSERT INTO `pl_adds` VALUES ('Kurt','1234657890','excellent',60.00,3);
-INSERT INTO `pl_adds` VALUES ('Kurt','4567981320','excellent',40.00,3);
 /*!40000 ALTER TABLE `pl_adds` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -74,10 +69,7 @@ CREATE TABLE `pl_book` (
 
 LOCK TABLES `pl_book` WRITE;
 /*!40000 ALTER TABLE `pl_book` DISABLE KEYS */;
-INSERT INTO `pl_book` VALUES ('0321563840','9780321563842','The C++ Programming Language',NULL,'Bjarne Stroustrup','4');
-INSERT INTO `pl_book` VALUES ('1234567890',NULL,'Baking Cookies with Barney','Cooking','Barney','1');
 INSERT INTO `pl_book` VALUES ('1234657890',NULL,'My favorite book',NULL,'Who knows',NULL);
-INSERT INTO `pl_book` VALUES ('1491918667','9781491918661','Learning PHP, MySQL & Javascri','Computers','Robin Nixon','4');
 INSERT INTO `pl_book` VALUES ('4567981320',NULL,'Someone\'s book',NULL,'John Smith',NULL);
 /*!40000 ALTER TABLE `pl_book` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -91,11 +83,16 @@ DROP TABLE IF EXISTS `pl_user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pl_user` (
   `Username` varchar(15) NOT NULL,
-  `Email` varchar(30) NOT NULL,
-  `Password` varchar(32) NOT NULL,
+  `EmailReal` varchar(37) NOT NULL,
+  `EmailAnon` varchar(37) NOT NULL,
+  `Password` varchar(60) NOT NULL,
   `LastLoginDate` date NOT NULL,
+  `Verified` tinyint(1) NOT NULL,
+  `VerifyCode` varchar(60) NOT NULL,
   PRIMARY KEY (`Username`),
-  UNIQUE KEY `Email` (`Email`)
+  UNIQUE KEY `Email` (`EmailReal`),
+  UNIQUE KEY `Username` (`Username`),
+  UNIQUE KEY `EmailAnon` (`EmailAnon`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -105,8 +102,10 @@ CREATE TABLE `pl_user` (
 
 LOCK TABLES `pl_user` WRITE;
 /*!40000 ALTER TABLE `pl_user` DISABLE KEYS */;
-INSERT INTO `pl_user` VALUES ('Justin','j005@csusm.edu','Password','2017-11-18');
-INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','wololo','2017-11-12');
+INSERT INTO `pl_user` VALUES ('Justin','j005@csusm.edu','user-Justin@peer-library.org','Password','2017-11-14',0,'');
+INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','user-Kurt@peer-library.com','$2y$10$o8TUvhecEsj4q6ab2jmCN.D8RVVLxWZ3P2auMtA3hAOC.XMupZ7m.','2017-12-03',1,'$2y$10$.odx4eNhshzRPmLB25W2lef/6.8FfGUMMVqzxs8iiRltWNXRrA6AW');
+INSERT INTO `pl_user` VALUES ('Newuser','newsies@some.com','user-Newuser@peer-library.org','qwerty','2017-11-13',0,'');
+INSERT INTO `pl_user` VALUES ('testSubject','abc@abc.com','user-testSubject@peer-library.org','12345','2017-11-13',0,'');
 /*!40000 ALTER TABLE `pl_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -119,4 +118,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-18 17:00:17
+-- Dump completed on 2017-12-03 17:18:53
