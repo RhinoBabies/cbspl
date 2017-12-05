@@ -75,11 +75,6 @@
 		}
 
 
-		public function query_db($sql)
-		{
-			$this->conn->query($sql);
-		}
-
 
 		/*	private function list_all_users()
 
