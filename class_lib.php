@@ -48,7 +48,6 @@
 
 			if ($result->num_rows > 0) {
 				$row = $result->fetch_row();
-				//printf("Default database is %s.\n<br>", $row[0]);
 				$result->close();
 			}
 
@@ -58,7 +57,9 @@
 		}
 
 
-		public function login_db() {
+    
+		public function login_db()
+		{
 			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
 		}
 
@@ -66,6 +67,11 @@
 		public function logout_db()
 		{
 			$this->conn->close();
+		}
+
+		public function query_db($sql)
+		{
+			$this->conn->query($sql);
 		}
 
 
@@ -111,43 +117,47 @@
 		*/
 		private function login(&$username, $password)
 		{
-			$password_match = false;
-			//echo "Trying to login with " . $username . " and " . $password . "...<br>";
+			// Initialize variables
+			$tempname = $this->conn->real_escape_string($username);
+			$tempname = '\''.$tempname.'\'';
+			$user_found = false;
+			$row;
 
-			//Run SQL query that checks username against password
-			$sql = "SELECT * FROM pl_User WHERE Username = \"" . $username . "\" AND Password = \"" . $password . "\"";
+			//Run SQL query that checks for username
+			$sql = "SELECT * FROM pl_user WHERE Username = $tempname";
 			$result = $this->conn->query($sql);
 
-			//If there are any results, password was matched
+			//If there are any results, username was found
 			if($result->num_rows > 0) {
-				while($row = $result->fetch_assoc()) {
-					$password_match = true;
-				}
+				$row = $result->fetch_assoc();
+				$user_found = true;
 			}
-			else // password did not match username
+			else // username was not found
 			{
-				// Check e-mail address against password
-				$sql = "SELECT * FROM pl_user WHERE Email = \"" . $username . "\" AND Password = \"" . $password . "\"";
+				// Run SQL query that checks for e-mail address
+				$sql = "SELECT * FROM pl_user WHERE EmailReal = $tempname";
 				$result = $this->conn->query($sql);
 
 				if ($result->num_rows > 0) {
 					$row = $result->fetch_assoc();
-					$username = $row["Username"];
-					$password_match = true;
+					$username = $row["Username"]; // change username to actual username
+					$user_found = true;
 				}
-				else // password did not match e-mail either
-					return false;
 			}
 
 			//On a password match, update the logged_in flag and user_login_date
-			if($password_match == true)
+			if($user_found == true)
 			{
-				//echo "Matched " . $row["Username"] . "<br>";
-				$this->set_logged_in(true);
-				$this->update_user_login_date($username);
-				$this->valid_username = $username;
-				return true;
+				// check password
+				if(password_verify($password, $row["Password"]) && $row["Verified"] == true) {
+					$this->set_logged_in(true);
+					$this->update_user_login_date($username);
+					$this->valid_username = $username;
+					return true;
+				}
 			}
+			else // no match
+				return false;
 		} //end of login()
 
 

@@ -85,6 +85,18 @@ header ul{
   margin-bottom: 10px;
 }
 
+.error{
+  color: #ffaa00;
+  text-align: left;
+  font-weight: bold;
+}
+
+.success{
+  color: #66ff00;
+  text-align: left;
+  font-weight: bold;
+}
+
 /* Style The Dropdown Button */
 .dropbtn {
     background-color: #4CAF50;
