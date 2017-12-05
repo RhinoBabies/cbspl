@@ -1,7 +1,16 @@
 <?php
-  include("class_lib.php"); 
+  include("class_lib.php");
   session_start();
-  $db_conn = $_SESSION["db_conn"]; //recall the db_connection that was setup on login
+
+  //make sure the user is logged in
+  if(!empty($_SESSION["user"]))
+    $db_conn = $_SESSION["db_conn"]; //recall the db_connection that was setup on login
+  //otherwise, send them directly to log_in page
+  else
+  {
+    $_SESSION["login_error"] = "You must be logged in to view that page.<br>";
+    header("Location: ./log_in.php");
+  }
 ?>
 <!DOCTYPE html>
 <html>

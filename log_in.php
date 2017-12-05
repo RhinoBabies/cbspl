@@ -1,5 +1,10 @@
 <?php
   session_start();
+  //Redirects to the logged_in_homepage if the user is already logged in
+  if(!empty($_SESSION["user"]))
+  {
+    header("Location: ./logged_in_homepage.php");
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -42,9 +47,9 @@
           <form class="log_in" method="post" action="checkLogin.php">
           <div>
             <label>Username</label><br>
-            <input type="text" placeholder="Username" name="name" maxlength="37" required autofocus>
+            <input type="text" placeholder="Username or Email" name="name" maxlength="37" required autofocus>
           </div><br>
-
+      
           <div>
             <label>Password</label><br>
             <input type="password" placeholder="Password" name="password" maxlength="72" required>

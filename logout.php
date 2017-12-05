@@ -2,8 +2,8 @@
 	include ("class_lib.php");
 	session_start();
 
-	$db_conn = $_SESSION["db_conn"];
-	$db_conn->logout_db();
+//	$db_conn = $_SESSION["db_conn"];
+//	$db_conn->logout_db();
 
 	// Unset all of the session variables.
 	$_SESSION = array();
@@ -14,8 +14,7 @@
 	    $params = session_get_cookie_params();
 	    setcookie(session_name(), '', time() - 42000,
 	        $params["path"], $params["domain"],
-	        $params["secure"], $params["httponly"]
-	    );
+	        $params["secure"], $params["httponly"]);
 	}
 
 	// Finally, destroy the session.

@@ -1,6 +1,16 @@
 <?php
   include("class_lib.php"); 
   session_start();
+
+  //make sure the user is logged in
+  if(!empty($_SESSION["user"]))
+    $db_conn = $_SESSION["db_conn"]; //recall the db_connection that was setup on login
+  //otherwise, send them directly to log_in page
+  else
+  {
+    $_SESSION["login_error"] = "You must be logged in to view that page.<br>";
+    header("Location: ./log_in.php");
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,7 +47,7 @@
         <form>
           <div class="search">
             <input type="search" placeholder="Book Title or ISBN Number">
-            <button class="button1" type="submit"><a href="search_positive.html">Search</a></button>
+            <a href="search_positive.html"><button class="button1" type="submit">Search</button></a>
           </div>
         </form>
       </div>
@@ -78,34 +88,20 @@
         </article>
         <article id="main-col2">
             <div>
-              <button class="button1" type="submit"><a href="watchlist.html">Watchlist</a></button>
+              <a href="watchlist.php"><button class="button1" type="submit">See My Watchlist</button></a>
             </div>
         </article>
 
-        <article id="main-col2">
-          <h1 class="page-title">Your Book Nook</h1>
-            <div>
-              <a href="bookinformation.html"><img src="./images/Cookie Barney Software, LLC..jpg"></a>
-              <a href="bookinformation.html"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></a>
-            </div>
-        </article>
-        <article id="main-col2">
-            <div>
-              <a href="bookinformation.html"><img src="./images/Cookie Barney Software, LLC..jpg"></a>
-              <a href="bookinformation.html"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></a>
-            </div>
-        </article>
-        <article id="main-col2">
-            <div>
-              <a href="bookinformation.html"><img src="./images/Cookie Barney Software, LLC..jpg"></a>
-              <a href="bookinformation.html"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></a>
-            </div>
-        </article>
-        <article id="main-col2">
-            <div>
-              <button class="button1" type="submit"><a href="booknook.html">Nook</a></button>
-            </div>
-        </article>
+      <article id="main-col2">
+          <h1 class="page-title">My Book Nook</h1>
+          <?php
+            $db_conn->list_my_books(3); //can change the argument # to print less/more recent book postings
+          ?>
+      <article id="main-col2">
+        <div>
+          <a href="booknook.php"><button class="button1">Go to My Book Nook</button></a>
+        </div>
+      </article>
 
       </div>
     </section>

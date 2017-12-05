@@ -57,6 +57,7 @@
 		}
 
 
+    
 		public function login_db()
 		{
 			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
@@ -67,6 +68,12 @@
 		{
 			$this->conn->close();
 		}
+
+		public function query_db($sql)
+		{
+			$this->conn->query($sql);
+		}
+
 
 		public function query_db($sql)
 		{
@@ -186,44 +193,89 @@
 		}
 
 
-		public function list_my_books()
+		public function list_my_books($output_num = 0)
 		{
 			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
 			$sql = "SELECT `ISBN_10_Added`,`Condition`,`Cost`,`SellType` FROM `pl_adds` WHERE Username = '" . $this->valid_username . "'";
 
 			$result = $this->conn->query($sql);
 
-			$firstBook = true; //HTML output changes for books after the first
-
-			if($result->num_rows > 0)
+			if($result->num_rows > 0) //there are books posted by this user
 			{
-				echo "You have " . $result->num_rows . " books posted!<br><br>";
+				$bFirstBook = true; //passed to properly output HTML on first book listing
 
-				while($row = $result->fetch_assoc())
+				//if no output number is specifed for how many books to print, set output to total books
+				//this happens in the Book Nook
+				if($output_num == 0)
 				{
-					$isbn10 = $row["ISBN_10_Added"];
-					$condition = $row["Condition"];
-					$sellType = $row["SellType"];
-					if($sellType == 3)
-						$cost = $row["Cost"];
+					$output_num = $result->num_rows;
+					if($output_num == 1)
+						echo "You have one book posted!<br><br>";
 					else
-						$cost = "FREE!";
+						echo "You have " . $output_num . " books posted!<br><br>";
+				}
+				else //calling page specifies how many books to output; output is > 0 here
+				{
+					if($output_num == 1) //singular printing; special grammar
+					{
+						echo "Here is your most recent book posting!<br><br>";
+					}
+					else //calling pages is printing more than one; check for total books
+					{
+						if($output_num > $result->num_rows) //limits output of books to actual number posted
+							$output_num = $result->num_rows;
+						echo "Here are your " . $output_num . " most recent book postings!<br><br>";
+					}
+				}
 
-					if(!$firstBook)
-						echo "<article id=\"main-col2\">\n";
-					else
-						$firstBook = false;
+				//now that total books needed to output has been determined, parse their info and print them
+				for($i = 0; $i < $output_num; $i++)
+				{
+					if($row = $result->fetch_assoc())
+					{
+						$book = new Book;
 
-					echo "<div><a href='bookinformation.html'><img src='./images/covers/" . $isbn10 . ".jpg' onerror=\"this.src='./images/covers/nocover.jpg';\" /></a>\n";
-					echo "</div>\n</article>\n";
+						$this->getBookInfo($row, $book, $bFirstBook);
+
+						if($bFirstBook)
+							$bFirstBook = false;
+
+						$this->HTMLforNookEntry($book);
+					}
 				}
 			}
-			else
+			else //there were no results in the SQL query above
 			{
 				echo "<p>You haven't added any books yet... <br>Help other students save money by <a href='addBook.php'>Adding a Book</a> now!</p>";
 				echo "</article>";
 			}
 		} //end of list_my_books()
+
+
+		private function getBookInfo(&$row, &$book, $firstBook = true)
+		{
+			$book->isbn10 = $row["ISBN_10_Added"];
+			$book->condition = $row["Condition"];
+			$book->sellType = $row["SellType"];
+
+			if($book->sellType == 3)
+				$book->cost = $row["Cost"];
+			else
+				$book->cost = "FREE!";
+
+			if(!$firstBook) //if this is not the first book, create new article tag
+				echo "<article id=\"main-col2\">\n";
+			else //otherwise the book info is already inside an article HTML tag
+				$firstBook = false;
+		}
+
+
+		private function HTMLforNookEntry($book)
+		{
+			echo "<div><a href='bookinformation.php?b=" . $book->isbn10 . "'><img src='./images/covers/" . $book->isbn10 . ".jpg' onerror=\"this.src='./images/covers/nocover.jpg';\" /></a>\n";
+			echo "</div>\n</article>\n";
+		}
+
 
 		public function add_book_to_nook($isbn, $title, $author, $condition, $gbsVal, $cost)
 		{
@@ -231,16 +283,16 @@
 
 			//check for book in pl_book table; if it's not there, it must be added first
 			/*
-			$sql = "SELECT * FROM `pl_book` WHERE `ISBN_10` = '" . $isbn . "' ";
+				$sql = "SELECT * FROM `pl_book` WHERE `ISBN_10` = '" . $isbn . "' ";
 
-			$result = $this->conn->query($sql);
-			if($result->num_rows > 0)
-				//book is already in the table;
-			else
-				//parse ISBN db for information here or on form?
-				//add book to pl_book
+				$result = $this->conn->query($sql);
+				if($result->num_rows > 0)
+					//book is already in the table;
+				else
+					//parse ISBN db for information here or on form?
+					//add book to pl_book
 
-			$result->close();
+				$result->close();
 			*/
 
 			//then add book to pl_adds table with username
@@ -255,6 +307,44 @@
 				return false;
 		} //end of add_book_to_nook()
 
+		/*	Passed in parameter, $book, should have its ISBN already as part of the class.
+			The function uses this existing ISBN and Username to grab their posted book's information.
+		*/
+		public function fillBookInfo(&$book, $username)
+		{
+			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
+
+			$sql = "SELECT * FROM pl_adds WHERE Username = '" . $username . "' AND ISBN_10_Added = '" . $book->isbn10 . "'";
+			$result = $this->conn->query($sql);
+			if($result->num_rows > 0) //this SHOULD happen since the user is clicking a book they have currently listed
+			{
+				$row = $result->fetch_assoc();
+				$book->condition = $row["Condition"];
+				$book->sellType = $row["SellType"];
+				$book->cost = $row["Cost"];
+			}
+			//else condition? book was removed on a separate tab while user was editing this book?
+
+			//title must be retrieved from the pl_book table since it is not stored in the pl_adds table (3rd normal form rule)
+			$sql = "SELECT * FROM pl_book WHERE ISBN_10 = '" . $book->isbn10 . "'";
+			$result = $this->conn->query($sql);
+			if($result->num_rows > 0) //this SHOULD happen since the user is clicking a book they have currently listed
+			{
+				$row = $result->fetch_assoc();
+				$book->title = $row["TITLE"];
+			}
+		} //end of fillBookInfo
+
 
 	} //end of class db_connection
+
+	class Book //basically a book struct
+	{
+		public $isbn10;
+		public $title;
+		public $condition;
+		public $sellType;
+		public $cost;
+	}
+
 ?>
