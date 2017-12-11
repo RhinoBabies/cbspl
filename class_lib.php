@@ -1,4 +1,6 @@
 <?php
+	include_once("libraries".DIRECTORY_SEPARATOR."constants.php");
+
 	//Handles user logins and password checking
 	class db_connection
 	{ //connection to the database
@@ -21,10 +23,10 @@
 		*/
 		function __construct() //NOTE: constructors in PHP have two underscores and not just one
 		{
-			$this->db_server = "localhost";
-			$this->db_username = "cbspl";
-			$this->db_password = "";
-			$this->db_name = "my_cbspl";
+			$this->db_server = DB_SERVER;
+			$this->db_username = DB_USERNAME;
+			$this->db_password = DB_PASSWORD;
+			$this->db_name = DB_NAME;
 			$this->logged_in = false;
 		}
 
@@ -68,12 +70,6 @@
 		{
 			$this->conn->close();
 		}
-
-		public function query_db($sql)
-		{
-			$this->conn->query($sql);
-		}
-
 
 		public function query_db($sql)
 		{
@@ -200,7 +196,13 @@
 
 			$result = $this->conn->query($sql);
 
-			if($result->num_rows > 0) //there are books posted by this user
+			if(empty($result->num_rows)) //there were no results in the SQL query
+			{
+				//echo "No rows in result.<br>";
+				echo "You haven't added any books yet... <br>Help other students save money by <a href='addBook.php'>Adding a Book</a> now!</p>";
+				echo "</article>";
+			}
+			else if($result->num_rows > 0) //there are books posted by this user
 			{
 				$bFirstBook = true; //passed to properly output HTML on first book listing
 
@@ -244,11 +246,8 @@
 					}
 				}
 			}
-			else //there were no results in the SQL query above
-			{
-				echo "<p>You haven't added any books yet... <br>Help other students save money by <a href='addBook.php'>Adding a Book</a> now!</p>";
-				echo "</article>";
-			}
+			else
+				echo "Whoops! Barney error! Email the <a href='mailto:admin@peer-library.com'>admin@peer-library.com</a><br>";
 		} //end of list_my_books()
 
 
@@ -273,6 +272,7 @@
 		private function HTMLforNookEntry($book)
 		{
 			echo "<div><a href='bookinformation.php?b=" . $book->isbn10 . "'><img src='./images/covers/" . $book->isbn10 . ".jpg' onerror=\"this.src='./images/covers/nocover.jpg';\" /></a>\n";
+			echo $book->title
 			echo "</div>\n</article>\n";
 		}
 
@@ -298,13 +298,21 @@
 			//then add book to pl_adds table with username
 
 			$sql = "INSERT INTO `pl_adds` (`Username`, `ISBN_10_Added`, `Condition`, `Cost`, `SellType`) VALUES ('". $this->valid_username . "', '" . $isbn . "', '". $condition . "', '" . $cost . "', '" . $gbsVal . "')";
+			
+			//echo $sql . "<br>";
 
 			if($this->conn->query($sql) === TRUE)
 			{
-				return true;
+				return ADD_BOOK_SUCCESSFUL; //book successfully added for user
 			}
 			else
-				return false;
+			{
+				echo $this->conn->errno . "<br>";
+				echo $this->conn->error . "<br>";
+
+				//Possible errors: https://dev.mysql.com/doc/refman/5.5/en/error-messages-server.html
+				return $this->conn->errno;
+			}
 		} //end of add_book_to_nook()
 
 		/*	Passed in parameter, $book, should have its ISBN already as part of the class.

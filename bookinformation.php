@@ -1,5 +1,5 @@
 <?php
-  include("class_lib.php");
+  include_once("class_lib.php");
   session_start();
 
   //make sure the user is logged in
@@ -72,7 +72,7 @@
           <div class="information">
             <div>
               <label>Title</label><br>
-              <input type="text" placeholder="Title" value="<?php echo $book->title;?>" <?php if(!$modifying) echo "disabled";?>>
+              <input type="text" placeholder="Title" value="<?php echo $book->title;?>" disabled>
             </div>
             <div>
               <label>Description</label><br>
@@ -87,7 +87,10 @@
               <input type="text" placeholder="Selling Option" value="<?php echo $book->sellType; ?>" <?php if(!$modifying) echo "disabled";?>>
             </div>
             <?php
-            //if: this book is this user's, display Modify and Remove buttons
+              //if
+                //this book is this user's, display Modify and Remove buttons
+              //else:
+                //display contact owner button
             ?>
             <div>
               <?php

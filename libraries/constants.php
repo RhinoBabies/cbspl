@@ -14,4 +14,9 @@
 	define("REGEX_EMAIL", "/^([a-zA-Z]|_)([a-zA-Z0-9]|_|-){0,18}(@cougars.csusm.edu)$/");
 	define("REGEX_USERNAME", "/^([a-zA-Z]|_)([a-zA-Z0-9]|_){2,14}$/");
 
+	// ADD BOOK ERROR CODES
+	define("ADD_BOOK_SUCCESSFUL", 0);
+	define("ADD_BOOK_DUP_ENTRY", 1062);
+	define("ADD_BOOK_FAIL", -1);
+
 ?>

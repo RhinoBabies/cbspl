@@ -1,5 +1,6 @@
 <?php
-  include("class_lib.php"); 
+  include_once("class_lib.php");
+  include_once("libraries".DIRECTORY_SEPARATOR."constants.php");
   session_start();
   
   //checks that user was logged in; if not, sends back to log in page
@@ -140,10 +141,18 @@
             {
               $bookAdded = $db_conn->add_book_to_nook($isbn10, $title, $author, $condition, $gbsVal, $cost);
 
-              if($bookAdded)
-                echo "<u>" . $title . "</u> was successfully added to your <a href=\"booknook.php\">Nook</a>!";
-              else
-                echo "<font color='red'>There was a database error when adding <u>" . $title ."</u> to your Nook. Please be sure to fill out all of the fields correctly.</font>";
+              switch($bookAdded) //gets actual error number from mysqli query
+              {
+                case ADD_BOOK_SUCCESSFUL:
+                   echo "<u>" . $title . "</u> was successfully added to your <a href=\"booknook.php\">Nook</a>!";
+                  break;
+                case ADD_BOOK_DUP_ENTRY:
+                  echo "It looks like you have already added this book. Did you mean to <a href='./bookinformation.php?b=" . $isbn10 . "'>Modify the book</a>?<br>";
+                  break;
+                case ADD_BOOK_FAIL:
+                  echo "<font color='red'>There was a database error when adding <u>" . $title ."</u> to your Nook. Please be sure to fill out all of the fields correctly.</font>";
+                  break;
+              }                
             }
 
             if($addBookError)
@@ -164,12 +173,12 @@
             </div>
             <div>
               <label>Title</label><br>
-              <input type="text" placeholder="Title" name="title" value ="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
+              <input type="text" placeholder="Title" name="title" maxlength="30" value ="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
                 echo $title; ?>" required>
             </div>
             <div>
               <label>Author</label><br>
-              <input type="text" placeholder="Author" name="author" value ="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
+              <input type="text" placeholder="Author" name="author" maxlength="30" value ="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
                 echo $author; ?>" required>
             </div>
             <div>
