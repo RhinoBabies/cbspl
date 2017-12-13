@@ -90,8 +90,8 @@
 	$temppass = password_hash($password, PASSWORD_BCRYPT);
 
 	// Add user
-	$conn->query("INSERT INTO pl_user (Username, EmailReal, EmailAnon, Password, VerifyCode)
-		VALUES ('$tempname', '$tempemail', '$emailanon', '$temppass', '$code_stored')");
+	$conn->query("INSERT INTO pl_user (Username, EmailReal, EmailAnon, Password, VerifyCode, Verified)
+		VALUES ('$tempname', '$tempemail', '$emailanon', '$temppass', '$code_stored', 0)");
 
 
 
@@ -119,7 +119,7 @@ Password: '.$password.'<br>
 --------------------------------------<br>
 <br>
 To verify your e-mail address, click the link below:<br>
-<a href=\"'.SITE_URL.'/verify.php?name='.$username.'&code='.$code.'\">Verify Account</a><br>
+<a href="'.SITE_URL.'/verify.php?name='.$username.'&code='.$code.'">Verify Account</a><br>
 <br>
 Best wishes,<br>
 Peer Library<br>
@@ -127,7 +127,7 @@ Peer Library<br>
 
 	// and the following headers
 	$headers = 'From: noreply@'.EMAIL_DOMAIN."\r\n";
-	$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+	$headers .= 'Content-type: text/html'."\r\n";
 
 	// Send the e-mail
 	mail($to, $subject, $message, $headers);

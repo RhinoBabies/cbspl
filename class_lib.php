@@ -1,4 +1,6 @@
 <?php
+	include_once("libraries".DIRECTORY_SEPARATOR."constants.php");
+
 	//Handles user logins and password checking
 	class db_connection
 	{ //connection to the database
@@ -21,10 +23,10 @@
 		*/
 		function __construct() //NOTE: constructors in PHP have two underscores and not just one
 		{
-			$this->db_server = "localhost";
-			$this->db_username = "cbspl";
-			$this->db_password = "";
-			$this->db_name = "my_cbspl";
+			$this->db_server = DB_SERVER;
+			$this->db_username = DB_USERNAME;
+			$this->db_password = DB_PASSWORD;
+			$this->db_name = DB_NAME;
 			$this->logged_in = false;
 		}
 
