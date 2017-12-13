@@ -46,10 +46,10 @@
     <section id="searching">
       <div class="container">
         <h1>Search:</h1>
-        <form>
+        <form action="./search.php" method="get">
           <div class="search">
-            <input type="search" placeholder="Book Title or ISBN Number">
-            <a href="search_positive.html"><button class="button1" type="submit">Search</button></a>
+            <input type="search" placeholder="Book Title or ISBN Number" name="query">
+            <button class="button1" type="submit">Search</button></div></form>
           </div>
         </form>
       </div>

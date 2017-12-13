@@ -71,6 +71,7 @@
 			$this->conn->close();
 		}
 
+
 		public function query_db($sql)
 		{
 			return $this->conn->query($sql);
@@ -193,7 +194,7 @@
 		{
 			$this->login_db();
 			$sql = "SELECT `EmailAnon` FROM `pl_user` WHERE `Username` = '" . $user . "'";
-			echo $sql;
+			//echo $sql;
 
 			$result = $this->query_db($sql);
 			if(empty($result->num_rows))
@@ -422,14 +423,42 @@
 			$this->login_db();
 
 			$sql = "DELETE FROM pl_adds WHERE ISBN_10_Added = " . $book->isbn10 . " AND Username = '" . $user . "'";
+			
 			if($this->query_db($sql) === TRUE)
 				return true;
 			else
 				return false;
 		}
 
-	} //end of class db_connection
 
+		public function search($isbn)
+		{
+			$this->login_db();
+
+	        $sql = "SELECT * FROM pl_adds WHERE ISBN_10_Added = '$isbn'";
+	        //echo $sql;
+
+	        $result = $this->query_db($sql);
+
+	        if ($result->num_rows > 0) {
+	            // output data of each row
+				for($i = 0; $i < $result->num_rows; $i++)
+				{
+					if($row = $result->fetch_array())
+					{
+						$book = new Book;
+
+						$this->getBookInfo($row, $book);
+						$user_anon_email = $this->get_user_anon_email($row['Username']);
+						$this->HTMLforNookEntry($book, false, $user_anon_email);
+					}
+				}
+	        }
+	        else
+	            echo "There were no matches for ". $isbn ."...<br>";
+
+		} //end of class db_connection
+	}
 
 
 	class Book
