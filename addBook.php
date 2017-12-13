@@ -15,7 +15,7 @@
   //Check for valid input from form
   $addBookError = false;
   $isbn10 = $isbn13 = $title = $author = $condition = $gbs = "";
-  $isbn10Error = $titleError = $authorError = $conditionError = $gbsError = "";
+  $isbn10Error = $titleError = $authorError = $conditionError = $gbsError = $descError = $sellCostError = "";
 
   //if this page was just POST'ed through HTTP and reaccessing itself, check all the inputs from the form for validity
   if($_SERVER["REQUEST_METHOD"] == "POST")
@@ -37,6 +37,9 @@
       $author = test_input($_POST["author"]);
     else
       $authorError = "Author is a required field.";
+
+    if(!empty($_POST["description"]))
+      $description = test_input($_POST["description"]);
 
     if(!empty($_POST["condition"]) && $_POST["condition"] != "None")
       $condition = test_input($_POST["condition"]);
@@ -61,11 +64,14 @@
           //should the user insert a comment about what types of books/items they're bartering for? or leave it to the other student to make an offer?
           $cost = NULL;
           $gbsVal = 2;
+          if(empty($description))
+            $descError = "If you're bartering for something, describe what you're looking for in the description text box.";
           break;
         case "Sell" :
           $gbsVal = 3;
           if(empty($_POST["cost"]))
-          {  $sellCostError = "If you're selling your book, you need to set a minimum accepted price.";
+          {
+            $sellCostError = "If you're selling your book, you need to set a minimum accepted price.";
             $addBookError = true;
           }
           else
@@ -147,7 +153,7 @@
                    echo "<u>" . $title . "</u> was successfully added to your <a href=\"booknook.php\">Nook</a>!";
                   break;
                 case ADD_BOOK_DUP_ENTRY:
-                  echo "It looks like you have already added this book. Did you mean to <a href='./bookinformation.php?b=" . $isbn10 . "'>Modify the book</a>?<br>";
+                  echo "It looks like you have already added this book. Did you mean to <a href='./bookinformation.php?isbn=" . $isbn10 . "&owner=". $_SESSION['user_anon_email'] ."'>Modify the book</a>?<br>";
                   break;
                 case ADD_BOOK_FAIL:
                   echo "<font color='red'>There was a database error when adding <u>" . $title ."</u> to your Nook. Please be sure to fill out all of the fields correctly.</font>";
@@ -183,7 +189,9 @@
             </div>
             <div>
               <label>Description</label><br>
-              <textarea rows="2" cols="25" placeholder="Book Description"></textarea>
+              <?php if(!empty($descError)) echo "<font color='red'><b>" . $descError . "</b></font><br>"; ?>
+              <textarea style="font-family: Arial; font-size: 12px" rows="2" cols="25" name="description" placeholder="Book Description" maxlength="300"><?php if($_SERVER["REQUEST_METHOD"] == "POST")
+                echo $description; ?></textarea>
             </div>
             <div>
               <label>Condition</label><br>

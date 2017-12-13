@@ -28,6 +28,7 @@ CREATE TABLE `pl_adds` (
   `Condition` varchar(15) NOT NULL,
   `Cost` decimal(5,2) DEFAULT NULL,
   `SellType` int(1) NOT NULL,
+  `Description` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`Username`,`ISBN_10_Added`),
   KEY `FKBOOK` (`ISBN_10_Added`),
   CONSTRAINT `FKBOOK` FOREIGN KEY (`ISBN_10_Added`) REFERENCES `pl_book` (`ISBN_10`),
@@ -41,8 +42,7 @@ CREATE TABLE `pl_adds` (
 
 LOCK TABLES `pl_adds` WRITE;
 /*!40000 ALTER TABLE `pl_adds` DISABLE KEYS */;
-INSERT INTO `pl_adds` VALUES ('Justin','1234657890','Mint',199.99,2);
-INSERT INTO `pl_adds` VALUES ('Justy','0747549559','Well Used',0.00,1);
+INSERT INTO `pl_adds` VALUES ('Justin','1234657890','Well Used',0.00,1,NULL);
 /*!40000 ALTER TABLE `pl_adds` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -105,7 +105,7 @@ CREATE TABLE `pl_user` (
 LOCK TABLES `pl_user` WRITE;
 /*!40000 ALTER TABLE `pl_user` DISABLE KEYS */;
 INSERT INTO `pl_user` VALUES ('Justin','j005@csusm.edu','user-Justin@peer-library.org','Password','2017-11-14',0,'');
-INSERT INTO `pl_user` VALUES ('Justy','vesse005@cougars.csusm.edu','user-Justy@peer-library.com','$2y$10$Sqzt95Yi2pwJcqgFnDBwU.RjFCx57e9Qt5l2r6TPCRDiDHkWx6OAi','2017-12-11',1,'$2y$10$SaGxqet1xfgsAfjivDIEu.pEq2rqqzmicO7b4mtaWwrBC78rmobj2');
+INSERT INTO `pl_user` VALUES ('Justy','vesse005@cougars.csusm.edu','user-Justy@peer-library.com','$2y$10$Sqzt95Yi2pwJcqgFnDBwU.RjFCx57e9Qt5l2r6TPCRDiDHkWx6OAi','2017-12-12',1,'$2y$10$SaGxqet1xfgsAfjivDIEu.pEq2rqqzmicO7b4mtaWwrBC78rmobj2');
 INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','user-Kurt@peer-library.com','$2y$10$o8TUvhecEsj4q6ab2jmCN.D8RVVLxWZ3P2auMtA3hAOC.XMupZ7m.','2017-12-03',1,'$2y$10$.odx4eNhshzRPmLB25W2lef/6.8FfGUMMVqzxs8iiRltWNXRrA6AW');
 INSERT INTO `pl_user` VALUES ('Newuser','newsies@some.com','user-Newuser@peer-library.org','qwerty','2017-11-13',0,'');
 INSERT INTO `pl_user` VALUES ('testSubject','abc@abc.com','user-testSubject@peer-library.org','12345','2017-11-13',0,'');
@@ -121,4 +121,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-11 15:47:04
+-- Dump completed on 2017-12-13  0:50:19

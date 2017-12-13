@@ -5,6 +5,23 @@ body{
   background-color: #ffffff;
 }
 
+.bookTitle{
+  font-size: 20px;
+}
+
+.bookTitle a:link{
+  color: orange;
+}
+
+.bookTitle a:hover{
+  color: tomato;
+}
+
+.bookTitle a:active{
+  color: #d64322;
+}
+
+
 /* Global */
 .container{
   width:80%;

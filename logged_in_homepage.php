@@ -2,6 +2,8 @@
   include("class_lib.php"); 
   session_start();
 
+  unset($_SESSION["book"]);
+
   //make sure the user is logged in
   if(!empty($_SESSION["user"]))
     $db_conn = $_SESSION["db_conn"]; //recall the db_connection that was setup on login
@@ -29,16 +31,16 @@
         <div id="branding">
           <img src="./images/PeerLibrary logo.png">
         </div>
-      <nav>
-        <ul>
-          <li class="current"><a href="logged_in_homepage.php">Home</a></li>
-          <li><a href="booknook.php">Nook</a></li>
-          <li><a href="watchlist.php">Watchlist</a></li>
-          <li><a href="account.php">Account</a></li>
-          <li><a href="logout.php">Log Out</a></li>
-        </ul>
+        <nav>
+          <ul>
+            <li class="current"><a href="logged_in_homepage.php">Home</a></li>
+            <li><a href="booknook.php">Nook</a></li>
+            <li><a href="watchlist.php">Watchlist</a></li>
+            <li><a href="account.php">Account</a></li>
+            <li><a href="logout.php">Log Out</a></li>
+          </ul>
+        </nav>
       </div>
-      </nav>
     </header>
 
     <section id="searching">
@@ -95,7 +97,7 @@
       <article id="main-col2">
           <h1 class="page-title">My Book Nook</h1>
           <?php
-            $db_conn->list_my_books(3); //can change the argument # to print less/more recent book postings
+            $db_conn->list_my_books(3, $_SESSION["user_anon_email"]); //can change the argument # to print less/more recent book postings
           ?>
       <article id="main-col2">
         <div>

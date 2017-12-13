@@ -10,6 +10,7 @@
   {
   	//set session variables for username to remember their log-in information
   	$_SESSION["user"] = $_POST["name"];
+    $_SESSION["user_anon_email"] = $db_conn->get_user_anon_email($_SESSION["user"]);
     $_SESSION["db_conn"] = $db_conn;
   	header('Location: logged_in_homepage.php');
   	exit();
