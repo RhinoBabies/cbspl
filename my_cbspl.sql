@@ -43,8 +43,12 @@ CREATE TABLE `pl_adds` (
 LOCK TABLES `pl_adds` WRITE;
 /*!40000 ALTER TABLE `pl_adds` DISABLE KEYS */;
 INSERT INTO `pl_adds` VALUES ('Justin','1234657890','Well Used',0.00,1,NULL);
-INSERT INTO `pl_adds` VALUES ('Justy','0131103628','Lightly Used',1.00,3,NULL);
+INSERT INTO `pl_adds` VALUES ('Justy','0131103628','Lightly Used',0.00,2,'asdf');
+INSERT INTO `pl_adds` VALUES ('Justy','0133943038','Well Used',3.00,3,'');
+INSERT INTO `pl_adds` VALUES ('Justy','0545162076','Like New',0.00,1,NULL);
 INSERT INTO `pl_adds` VALUES ('Justy','0747549559','Lightly Used',0.00,1,NULL);
+INSERT INTO `pl_adds` VALUES ('Justy','1338099132','Like New',0.00,2,NULL);
+INSERT INTO `pl_adds` VALUES ('Justy','1784391360','Like New',0.00,1,NULL);
 /*!40000 ALTER TABLE `pl_adds` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -74,8 +78,12 @@ LOCK TABLES `pl_book` WRITE;
 /*!40000 ALTER TABLE `pl_book` DISABLE KEYS */;
 INSERT INTO `pl_book` VALUES ('0060652942',NULL,'The abolition of man, or, Refl',NULL,'Lewis, C. S.',NULL);
 INSERT INTO `pl_book` VALUES ('0131103628',NULL,'The C programming language',NULL,'Kernighan, Brian W.',NULL);
+INSERT INTO `pl_book` VALUES ('0133943038',NULL,'Software engineering',NULL,'Sommerville, Ian',NULL);
+INSERT INTO `pl_book` VALUES ('0545162076',NULL,'Harry Potter Paperback Boxed S',NULL,'J.K. Rowling',NULL);
 INSERT INTO `pl_book` VALUES ('0747549559',NULL,'Harry Potter and the Philosoph',NULL,'J.K. Rowling',NULL);
 INSERT INTO `pl_book` VALUES ('1234657890',NULL,'My favorite book',NULL,'Who knows',NULL);
+INSERT INTO `pl_book` VALUES ('1338099132',NULL,'Harry Potter and the cursed ch',NULL,'Jack Thorne',NULL);
+INSERT INTO `pl_book` VALUES ('1784391360',NULL,'Unity 5.x cookbook',NULL,'Smith, Matt',NULL);
 INSERT INTO `pl_book` VALUES ('4567981320',NULL,'Someone\'s book',NULL,'John Smith',NULL);
 /*!40000 ALTER TABLE `pl_book` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -126,4 +134,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-13  4:14:44
+-- Dump completed on 2017-12-13  4:59:59
