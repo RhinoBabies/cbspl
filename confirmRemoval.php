@@ -11,6 +11,8 @@
     header("Location: ./log_in.php");
   }
 
+  $deleted = false;
+
   $book = $_SESSION["book"];
   if($_SERVER["REQUEST_METHOD"] == "POST") {
     //delete book
@@ -64,7 +66,7 @@
               <h3>' . $book->printBookInfo() . '</h3>
               <form action="" method="post"><button class="button2">Remove Listing</button></form>
             </div>';
-          if($deletionError){
+          if(isset($deletionError)){
             echo $deletionError;
             unset($deletionError);
           }

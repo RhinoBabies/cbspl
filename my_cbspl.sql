@@ -43,7 +43,6 @@ CREATE TABLE `pl_adds` (
 LOCK TABLES `pl_adds` WRITE;
 /*!40000 ALTER TABLE `pl_adds` DISABLE KEYS */;
 INSERT INTO `pl_adds` VALUES ('Justin','1234657890','Well Used',0.00,1,NULL);
-INSERT INTO `pl_adds` VALUES ('Justy','0060652942','Well Used',0.00,1,NULL);
 INSERT INTO `pl_adds` VALUES ('Justy','0131103628','Lightly Used',1.00,3,NULL);
 INSERT INTO `pl_adds` VALUES ('Justy','0747549559','Lightly Used',0.00,1,NULL);
 /*!40000 ALTER TABLE `pl_adds` ENABLE KEYS */;
@@ -127,4 +126,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-13  4:04:58
+-- Dump completed on 2017-12-13  4:14:44
