@@ -68,6 +68,11 @@
 		exit();
 	}
 
+	// Success in all fields. Unset associated session variables
+	unset($_SESSION['email_add']);
+	unset($_SESSION['name_add']);
+	unset($_SESSION['name_avail']);
+
 
 
 	// ========================
@@ -88,7 +93,7 @@
 	$conn->query("INSERT INTO pl_user (Username, EmailReal, EmailAnon, Password, VerifyCode)
 		VALUES ('$tempname', '$tempemail', '$emailanon', '$temppass', '$code_stored')");
 
-	echo $code;
+
 
 	// ============================
 	// * SEND VERIFICATION E-MAIL *
@@ -133,6 +138,51 @@ Peer Library<br>
 	// * DISPLAY MESSAGE TO USER *
 	// ===========================
 
-	echo 'Verification e-mail sent to your account.<br>Check your e-mail to verify your account.';
+	echo '<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Easier way to trade and sell textbooks">
+    <meta name="keywords" content="web seller, affordable textbooks, peer-to-peer selling">
+    <meta name="author" content="Cookie Barney Software">
+    <title>Peer Library | Register </title>
+    <link rel="stylesheet" href="./css/style.css">
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div id="branding">
+          <img src="./images/PeerLibrary logo.png">
+        </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li  class="current"><a href="log_in.php">Log In</a></li>
+        </ul>
+      </div>
+      </nav>
+    </header>
+
+    <article id="main-col2">
+        <h1 class="page-title">You\'ve been registered!</h1>
+          <div>
+            <h3>An email has been sent to your account.</h3>
+            <h3>Please check your email and verify your account.</h3>
+          </div>
+        <a href="index.html"><button class="button1" type="submit">Return to Home</a></button>
+    </article>
+
+
+    </div>
+  </section>
+
+  <div style="clear: both"></div>
+  <footer>
+    <p>Peer Library, Copyright &copy; 2017</p>
+  </footer>
+
+  </body>
+</html>';
 
 ?>
