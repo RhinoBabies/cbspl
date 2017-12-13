@@ -57,12 +57,12 @@
         case "Give" :
           //incentive for users to give their book away for free?
           //make the user verify that they are just giving their book away?
-          $cost = NULL;
+          $cost = 0;
           $gbsVal = 1;
           break;
         case "Barter" :
           //should the user insert a comment about what types of books/items they're bartering for? or leave it to the other student to make an offer?
-          $cost = NULL;
+          $cost = 0;
           $gbsVal = 2;
           if(empty($description))
             $descError = "If you're bartering for something, describe what you're looking for in the description text box.";
