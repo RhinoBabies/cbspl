@@ -1,5 +1,5 @@
 <?php
-  include("class_lib.php");
+  include_once("class_lib.php");
   session_start();
 
   //make sure the user is logged in
@@ -62,7 +62,7 @@
       <article id="main-col2">
           <h1 class="page-title"><?php echo $_SESSION["user"]; ?>'s Book Nook</h1>
           <?php
-            $db_conn->list_my_books();
+            $db_conn->list_my_books(0, $_SESSION["user_anon_email"]);
           ?>
 
     <div style="clear: both"></div>

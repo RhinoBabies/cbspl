@@ -73,7 +73,7 @@
 
 		public function query_db($sql)
 		{
-			$this->conn->query($sql);
+			return $this->conn->query($sql);
 		}
 
 
@@ -189,15 +189,41 @@
 			$this->conn->query($sql);
 		}
 
+	    //$_SESSION["user_anon_email"] = $db_conn->getUserAnonEmail($_SESSION["user"]);
+	    public function get_user_anon_email($user)
+		{
+			$this->login_db();
+			$sql = "SELECT `EmailAnon` FROM `pl_user` WHERE `Username` = '" . $user . "'";
+			echo $sql;
 
-		public function list_my_books($output_num = 0)
+			$result = $this->query_db($sql);
+			if(empty($result->num_rows))
+			{
+				echo "No anon email for user: " . $user . "<br>\n";
+				echo $result->errno . "\n";
+				echo $result->error . "\n";
+			}
+			else{
+				$row = $result->fetch_row();
+				return $row[0];
+			}
+		}
+
+
+		public function list_my_books($output_num = 0, $user_anon_email)
 		{
 			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
 			$sql = "SELECT `ISBN_10_Added`,`Condition`,`Cost`,`SellType` FROM `pl_adds` WHERE Username = '" . $this->valid_username . "'";
 
 			$result = $this->conn->query($sql);
 
-			if($result->num_rows > 0) //there are books posted by this user
+			if(empty($result->num_rows)) //there were no results in the SQL query
+			{
+				//echo "No rows in result.<br>";
+				echo "You haven't added any books yet... <br>Help other students save money by <a href='addBook.php'>Adding a Book</a> now!</p>";
+				echo "</article>";
+			}
+			else if($result->num_rows > 0) //there are books posted by this user
 			{
 				$bFirstBook = true; //passed to properly output HTML on first book listing
 
@@ -213,14 +239,15 @@
 				}
 				else //calling page specifies how many books to output; output is > 0 here
 				{
+					if($output_num > $result->num_rows)
+						$output_num = $result->num_rows;
+
 					if($output_num == 1) //singular printing; special grammar
 					{
 						echo "Here is your most recent book posting!<br><br>";
 					}
 					else //calling pages is printing more than one; check for total books
 					{
-						if($output_num > $result->num_rows) //limits output of books to actual number posted
-							$output_num = $result->num_rows;
 						echo "Here are your " . $output_num . " most recent book postings!<br><br>";
 					}
 				}
@@ -228,28 +255,25 @@
 				//now that total books needed to output has been determined, parse their info and print them
 				for($i = 0; $i < $output_num; $i++)
 				{
-					if($row = $result->fetch_assoc())
+					if($row = $result->fetch_array())
 					{
 						$book = new Book;
 
-						$this->getBookInfo($row, $book, $bFirstBook);
+						$this->getBookInfo($row, $book);
+
+						$this->HTMLforNookEntry($book, $bFirstBook, $user_anon_email);
 
 						if($bFirstBook)
 							$bFirstBook = false;
-
-						$this->HTMLforNookEntry($book);
 					}
 				}
 			}
-			else //there were no results in the SQL query above
-			{
-				echo "<p>You haven't added any books yet... <br>Help other students save money by <a href='addBook.php'>Adding a Book</a> now!</p>";
-				echo "</article>";
-			}
+			else
+				echo "Whoops! Barney error! Email the <a href='mailto:admin@peer-library.com'>admin@peer-library.com</a>.<br>";
 		} //end of list_my_books()
 
 
-		private function getBookInfo(&$row, &$book, $firstBook = true)
+		private function getBookInfo(&$row, &$book)
 		{
 			$book->isbn10 = $row["ISBN_10_Added"];
 			$book->condition = $row["Condition"];
@@ -260,71 +284,132 @@
 			else
 				$book->cost = "FREE!";
 
+			$this->getBookTitle($book);
+		}
+
+		private function getBookTitle(&$book) //different table has to be accessed for title
+		{
+			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
+			$sql = "SELECT `Title` FROM `pl_book` WHERE ISBN_10 = '" . $book->isbn10 . "'";
+
+			$result = $this->conn->query($sql);
+			$row = $result->fetch_assoc();
+			$book->title = $row['Title'];
+		}
+
+
+		private function HTMLforNookEntry($book, $firstBook = true, $ownersAnonEmail)
+		{
 			if(!$firstBook) //if this is not the first book, create new article tag
 				echo "<article id=\"main-col2\">\n";
 			else //otherwise the book info is already inside an article HTML tag
 				$firstBook = false;
-		}
-
-
-		private function HTMLforNookEntry($book)
-		{
-			echo "<div><a href='bookinformation.php?b=" . $book->isbn10 . "'><img src='./images/covers/" . $book->isbn10 . ".jpg' onerror=\"this.src='./images/covers/nocover.jpg';\" /></a>\n";
-			echo "</div>\n</article>\n";
+			echo "<div><a href='bookinformation.php?isbn=" . $book->isbn10 . "&owner=" . $ownersAnonEmail . "'><img width=70 src='./images/covers/" . $book->isbn10 . ".jpg' onerror=\"this.src='./images/covers/nocover.jpg';\" />\n</div>";
+			echo "<div class='bookTitle'>\n<u>" . $book->title . "</u></a>\n</div>";
+			echo "<div class='bookTitle'>For \n" . $book->cost . " in " . $book->condition . " condition</div>";
+			echo "</article>\n";
 		}
 
 
 		public function add_book_to_nook($isbn, $title, $author, $condition, $gbsVal, $cost)
 		{
-			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
+			$this->login_db();
 
-			//check for book in pl_book table; if it's not there, it must be added first
-			/*
-				$sql = "SELECT * FROM `pl_book` WHERE `ISBN_10` = '" . $isbn . "' ";
+			$sql = "SELECT * FROM `pl_book` WHERE `ISBN_10` = '" . $isbn . "' ";
 
-				$result = $this->conn->query($sql);
-				if($result->num_rows > 0)
-					//book is already in the table;
-				else
-					//parse ISBN db for information here or on form?
-					//add book to pl_book
+			$result = $this->query_db($sql);
 
-				$result->close();
-			*/
+			if($result->num_rows > 0)
+				//book is already in the table;
+				echo "numrows: " . $result->num_rows;
+			else{
+				//add book to pl_book
+				echo $this->conn->error;
+				$sql = "INSERT INTO pl_book (ISBN_10, TITLE, AUTHOR) VALUES ('$isbn', '$title', '$author')";
+
+				if($this->query_db($sql))
+					echo "Adding book to nook...<br>";
+				else{
+					echo "Unable to add to nook...";
+					return $this->conn->error;
+				}
+
+			}
+
+			$result->close();
 
 			//then add book to pl_adds table with username
 
 			$sql = "INSERT INTO `pl_adds` (`Username`, `ISBN_10_Added`, `Condition`, `Cost`, `SellType`) VALUES ('". $this->valid_username . "', '" . $isbn . "', '". $condition . "', '" . $cost . "', '" . $gbsVal . "')";
+			
+			//echo $sql . "<br>";
 
 			if($this->conn->query($sql) === TRUE)
 			{
-				return true;
+				return ADD_BOOK_SUCCESSFUL; //book successfully added for user
 			}
 			else
-				return false;
+			{
+				echo $this->conn->errno . "<br>";
+				echo $this->conn->error . "<br>";
+
+				//Possible errors: https://dev.mysql.com/doc/refman/5.5/en/error-messages-server.html
+				return $this->conn->errno;
+			}
 		} //end of add_book_to_nook()
+
+		public function update_book_in_nook(Book $book, $username)
+		{
+			$this->login_db();
+
+			$sql = "UPDATE `pl_adds` SET `Condition` = '" . $book->condition . "', `Cost` = " . $book->cost . ", `SellType` = " . $book->sellType . ", Description = '" . $book->description . "' WHERE `pl_adds`.`Username` = '" . $username . "' AND `pl_adds`.`ISBN_10_Added` = " . $book->isbn10;
+			
+			//echo $sql . "<br>";
+
+			if($this->conn->query($sql) === TRUE)
+			{
+				return true; //book successfully added for user
+			}
+			else
+			{
+				echo $this->conn->error . "<br>";
+
+				//Possible errors: https://dev.mysql.com/doc/refman/5.5/en/error-messages-server.html
+				return false;
+			}
+		}
+
 
 		/*	Passed in parameter, $book, should have its ISBN already as part of the class.
 			The function uses this existing ISBN and Username to grab their posted book's information.
 		*/
-		public function fillBookInfo(&$book, $username)
+		public function fillBookInfo(&$book)
 		{
-			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
+			$this->login_db();
+
+			$sql = "SELECT Username FROM pl_User WHERE EmailAnon = '" . $book->ownersAnonEmail . "'";
+			$result = $this->query_db($sql);
+
+			$row = $result->fetch_array();
+			$username = $row[0];
 
 			$sql = "SELECT * FROM pl_adds WHERE Username = '" . $username . "' AND ISBN_10_Added = '" . $book->isbn10 . "'";
-			$result = $this->conn->query($sql);
+			$result = $this->query_db($sql);
+
 			if($result->num_rows > 0) //this SHOULD happen since the user is clicking a book they have currently listed
 			{
 				$row = $result->fetch_assoc();
 				$book->condition = $row["Condition"];
 				$book->sellType = $row["SellType"];
 				$book->cost = $row["Cost"];
+				$book->description = $row["Description"];
 			}
 			//else condition? book was removed on a separate tab while user was editing this book?
 
 			//title must be retrieved from the pl_book table since it is not stored in the pl_adds table (3rd normal form rule)
 			$sql = "SELECT * FROM pl_book WHERE ISBN_10 = '" . $book->isbn10 . "'";
 			$result = $this->conn->query($sql);
+
 			if($result->num_rows > 0) //this SHOULD happen since the user is clicking a book they have currently listed
 			{
 				$row = $result->fetch_assoc();
@@ -333,15 +418,39 @@
 		} //end of fillBookInfo
 
 
+		public function delete_book($book, $user)
+		{
+			$this->login_db();
+
+			$sql = "DELETE FROM pl_adds WHERE ISBN_10_Added = " . $book->isbn10 . " AND Username = '" . $user . "'";
+			if($this->query_db($sql) === TRUE)
+				return true;
+			else
+				return false;
+		}
+
 	} //end of class db_connection
 
-	class Book //basically a book struct
+
+
+	class Book
 	{
 		public $isbn10;
 		public $title;
 		public $condition;
 		public $sellType;
 		public $cost;
+		public $description;
+		public $ownersAnonEmail;
+
+		public function printBookInfo()
+		{
+			echo "ISBN-10: " . $this->isbn10 . "<br>
+			TITLE: " . $this->title . "<br>
+			CONDITION: " . $this->condition ."<br>
+			SELL TYPE: " . $this->sellType ."<br>
+			COST: " . $this->cost . "<br>";
+		}
 	}
 
 ?>

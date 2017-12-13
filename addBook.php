@@ -1,5 +1,6 @@
 <?php
-  include("class_lib.php"); 
+  include_once("class_lib.php");
+  include_once("libraries".DIRECTORY_SEPARATOR."constants.php");
   session_start();
   
   //checks that user was logged in; if not, sends back to log in page
@@ -13,8 +14,8 @@
 
   //Check for valid input from form
   $addBookError = false;
-  $isbn10 = $isbn13 = $title = $author = $condition = $gbs = "";
-  $isbn10Error = $titleError = $authorError = $conditionError = $gbsError = "";
+  $isbn10 = $isbn13 = $title = $author = $condition = $gbs = $description = "";
+  $isbn10Error = $titleError = $authorError = $conditionError = $gbsError = $descError = $sellCostError = "";
 
   //if this page was just POST'ed through HTTP and reaccessing itself, check all the inputs from the form for validity
   if($_SERVER["REQUEST_METHOD"] == "POST")
@@ -36,6 +37,9 @@
       $author = test_input($_POST["author"]);
     else
       $authorError = "Author is a required field.";
+
+    if(!empty($_POST["description"]))
+      $description = test_input($_POST["description"]);
 
     if(!empty($_POST["condition"]) && $_POST["condition"] != "None")
       $condition = test_input($_POST["condition"]);
@@ -60,11 +64,14 @@
           //should the user insert a comment about what types of books/items they're bartering for? or leave it to the other student to make an offer?
           $cost = NULL;
           $gbsVal = 2;
+          if(empty($description))
+            $descError = "If you're bartering for something, describe what you're looking for in the description text box.";
           break;
         case "Sell" :
           $gbsVal = 3;
           if(empty($_POST["cost"]))
-          {  $sellCostError = "If you're selling your book, you need to set a minimum accepted price.";
+          {
+            $sellCostError = "If you're selling your book, you need to set a minimum accepted price.";
             $addBookError = true;
           }
           else
@@ -140,10 +147,18 @@
             {
               $bookAdded = $db_conn->add_book_to_nook($isbn10, $title, $author, $condition, $gbsVal, $cost);
 
-              if($bookAdded)
-                echo "<u>" . $title . "</u> was successfully added to your <a href=\"booknook.php\">Nook</a>!";
-              else
-                echo "<font color='red'>There was a database error when adding <u>" . $title ."</u> to your Nook. Please be sure to fill out all of the fields correctly.</font>";
+              switch($bookAdded) //gets actual error number from mysqli query
+              {
+                case ADD_BOOK_SUCCESSFUL:
+                   echo "<u>" . $title . "</u> was successfully added to your <a href=\"booknook.php\">Nook</a>!";
+                  break;
+                case ADD_BOOK_DUP_ENTRY:
+                  echo "It looks like you have already added this book. Did you mean to <a href='./bookinformation.php?isbn=" . $isbn10 . "&owner=". $_SESSION['user_anon_email'] ."'>Modify the book</a>?<br>";
+                  break;
+                case ADD_BOOK_FAIL:
+                  echo "<font color='red'>There was a database error when adding <u>" . $title ."</u> to your Nook. Please be sure to fill out all of the fields correctly.</font>";
+                  break;
+              }                
             }
 
             if($addBookError)
@@ -158,23 +173,25 @@
           </div>
           <div class="information">
             <div>
-              <label>ISBN-10</label><br>
+              <label>ISBN-10</label>&emsp;<span style="color:tomato;" id="comment"></span><br>
               <input type="text" placeholder="10-digit ISBN" name="isbn10" minlength="10" maxlength="10" required pattern="[0-9]{10}" value="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
-                echo $isbn10; ?>">
+                echo $isbn10; ?>" onkeyup="getBookXML(this.value)" onblur="getBookXML(this.value)">
             </div>
             <div>
               <label>Title</label><br>
-              <input type="text" placeholder="Title" name="title" value ="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
+              <input type="text" placeholder="Title" id="title" name="title" maxlength="30" value ="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
                 echo $title; ?>" required>
             </div>
             <div>
               <label>Author</label><br>
-              <input type="text" placeholder="Author" name="author" value ="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
+              <input type="text" placeholder="Author" id="author" name="author" maxlength="30" value ="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
                 echo $author; ?>" required>
             </div>
             <div>
               <label>Description</label><br>
-              <textarea rows="2" cols="25" placeholder="Book Description"></textarea>
+              <?php if(!empty($descError)) echo "<font color='red'><b>" . $descError . "</b></font><br>"; ?>
+              <textarea style="font-family: Arial; font-size: 12px" rows="2" cols="25" name="description" placeholder="Book Description" maxlength="300"><?php if($_SERVER["REQUEST_METHOD"] == "POST" && $description !== "")
+                echo $description; ?></textarea>
             </div>
             <div>
               <label>Condition</label><br>
@@ -219,4 +236,73 @@
     </footer>
 
   </body>
+  <script>
+  function getBookXML(str) {
+    var xhttp, xmlDoc, txt, title, i, author;
+
+    if(str.length < 10){
+      document.getElementById("title").value = "";
+      //document.getElementById("fillThis").innerHTML = "Invalid ISBN";
+      document.getElementById("comment").innerHTML = "Please finish filling in the ISBN field ...";
+      
+      //if the string is less than 10 characters, for whatever reason, make the fields writable
+      document.getElementById("title").readOnly = false;
+      
+      return;
+    }
+    else if(str.length > 10) //if the string is more than 10 characters, make the fields writable
+    {
+      document.getElementById("title").readOnly = false;
+    }
+    else
+    {
+      //document.getElementById("url").innerHTML = "isbn_api.php?q=" + str;
+      //make the fields read only
+      document.getElementById("title").readOnly = true;
+      document.getElementById("comment").innerHTML = "";
+    }
+
+    xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function()
+    {
+      if(this.readyState == 4 && this.status == 200) //checks for response and OK status
+      {
+        xmlDoc = this.responseXML;
+
+        //grab title
+        title = xmlDoc.getElementsByTagName("title");
+        txt = "";
+
+        txt = txt + title[0].childNodes[0].nodeValue;
+
+
+        document.getElementById("title").value = txt;
+
+        //If the title value is empty, ie. error or nonexistent ISBN or book not in the ISBNapi database, 
+        //then make the field writable to allow the user to enter their own information manually
+        if(document.getElementById("title").value == "")
+        {
+          document.getElementById("title").readOnly = false;
+        }
+
+        //grab author
+        author = xmlDoc.getElementsByTagName("author_data");
+        txt = "";
+
+        txt = txt + author[0].childNodes[3].childNodes[0].nodeValue;
+
+        document.getElementById("author").value = txt;
+        
+        if(document.getElementById("author").value == "")
+        {
+          document.getElementById("author").readOnly = false;
+        }
+      }
+    };
+
+    xhttp.open("GET", "isbn_api.php?q=" + str, true); //AJAX opens the page dynamically
+    xhttp.send();
+  }
+
+  </script>
 </html>

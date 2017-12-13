@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `pl_adds`;
 CREATE TABLE `pl_adds` (
   `Username` varchar(15) NOT NULL,
   `ISBN_10_Added` varchar(10) NOT NULL,
-  `Quality` varchar(15) NOT NULL,
+  `Condition` varchar(15) NOT NULL,
   `Cost` decimal(5,2) DEFAULT NULL,
   `SellType` int(1) NOT NULL,
   `Description` varchar(300) DEFAULT NULL,
@@ -42,6 +42,15 @@ CREATE TABLE `pl_adds` (
 
 LOCK TABLES `pl_adds` WRITE;
 /*!40000 ALTER TABLE `pl_adds` DISABLE KEYS */;
+
+INSERT INTO `pl_adds` VALUES ('Justin','1234657890','Well Used',0.00,1,NULL);
+INSERT INTO `pl_adds` VALUES ('Justy','0131103628','Lightly Used',0.00,2,'asdf');
+INSERT INTO `pl_adds` VALUES ('Justy','0133943038','Well Used',3.00,3,'');
+INSERT INTO `pl_adds` VALUES ('Justy','0545162076','Like New',0.00,1,NULL);
+INSERT INTO `pl_adds` VALUES ('Justy','0747549559','Lightly Used',0.00,1,NULL);
+INSERT INTO `pl_adds` VALUES ('Justy','1338099132','Like New',0.00,2,NULL);
+INSERT INTO `pl_adds` VALUES ('Justy','1784391360','Like New',0.00,1,NULL);
+
 /*!40000 ALTER TABLE `pl_adds` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -69,6 +78,17 @@ CREATE TABLE `pl_book` (
 
 LOCK TABLES `pl_book` WRITE;
 /*!40000 ALTER TABLE `pl_book` DISABLE KEYS */;
+
+INSERT INTO `pl_book` VALUES ('0060652942',NULL,'The abolition of man, or, Refl',NULL,'Lewis, C. S.',NULL);
+INSERT INTO `pl_book` VALUES ('0131103628',NULL,'The C programming language',NULL,'Kernighan, Brian W.',NULL);
+INSERT INTO `pl_book` VALUES ('0133943038',NULL,'Software engineering',NULL,'Sommerville, Ian',NULL);
+INSERT INTO `pl_book` VALUES ('0545162076',NULL,'Harry Potter Paperback Boxed S',NULL,'J.K. Rowling',NULL);
+INSERT INTO `pl_book` VALUES ('0747549559',NULL,'Harry Potter and the Philosoph',NULL,'J.K. Rowling',NULL);
+INSERT INTO `pl_book` VALUES ('1234657890',NULL,'My favorite book',NULL,'Who knows',NULL);
+INSERT INTO `pl_book` VALUES ('1338099132',NULL,'Harry Potter and the cursed ch',NULL,'Jack Thorne',NULL);
+INSERT INTO `pl_book` VALUES ('1784391360',NULL,'Unity 5.x cookbook',NULL,'Smith, Matt',NULL);
+INSERT INTO `pl_book` VALUES ('4567981320',NULL,'Someone\'s book',NULL,'John Smith',NULL);
+
 /*!40000 ALTER TABLE `pl_book` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,7 +120,9 @@ CREATE TABLE `pl_user` (
 
 LOCK TABLES `pl_user` WRITE;
 /*!40000 ALTER TABLE `pl_user` DISABLE KEYS */;
+
 INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','user-Kurt@peer-library.com','$2y$10$ax52Z44crcD93hHFQWSdje3DEI15LJ2K6KTNghKw9fBTPmyntBGm6','0000-00-00',1,'$2y$10$Rh685DiYMwivl9Uyae6Q1uNM5sreGb1.LQ.cCEVmxn.12YHu5UVUK');
+
 /*!40000 ALTER TABLE `pl_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -114,3 +136,4 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2017-12-13 12:11:42
+
