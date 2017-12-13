@@ -14,7 +14,7 @@
 
   //Check for valid input from form
   $addBookError = false;
-  $isbn10 = $isbn13 = $title = $author = $condition = $gbs = "";
+  $isbn10 = $isbn13 = $title = $author = $condition = $gbs = $description = "";
   $isbn10Error = $titleError = $authorError = $conditionError = $gbsError = $descError = $sellCostError = "";
 
   //if this page was just POST'ed through HTTP and reaccessing itself, check all the inputs from the form for validity
@@ -173,24 +173,24 @@
           </div>
           <div class="information">
             <div>
-              <label>ISBN-10</label><br>
+              <label>ISBN-10</label>&emsp;<span style="color:tomato;" id="comment"></span><br>
               <input type="text" placeholder="10-digit ISBN" name="isbn10" minlength="10" maxlength="10" required pattern="[0-9]{10}" value="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
-                echo $isbn10; ?>">
+                echo $isbn10; ?>" onkeyup="getBookXML(this.value)" onblur="getBookXML(this.value)">
             </div>
             <div>
               <label>Title</label><br>
-              <input type="text" placeholder="Title" name="title" maxlength="30" value ="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
+              <input type="text" placeholder="Title" id="title" name="title" maxlength="30" value ="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
                 echo $title; ?>" required>
             </div>
             <div>
               <label>Author</label><br>
-              <input type="text" placeholder="Author" name="author" maxlength="30" value ="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
+              <input type="text" placeholder="Author" id="author" name="author" maxlength="30" value ="<?php if($_SERVER["REQUEST_METHOD"] == "POST")
                 echo $author; ?>" required>
             </div>
             <div>
               <label>Description</label><br>
               <?php if(!empty($descError)) echo "<font color='red'><b>" . $descError . "</b></font><br>"; ?>
-              <textarea style="font-family: Arial; font-size: 12px" rows="2" cols="25" name="description" placeholder="Book Description" maxlength="300"><?php if($_SERVER["REQUEST_METHOD"] == "POST")
+              <textarea style="font-family: Arial; font-size: 12px" rows="2" cols="25" name="description" placeholder="Book Description" maxlength="300"><?php if($_SERVER["REQUEST_METHOD"] == "POST" && $description !== "")
                 echo $description; ?></textarea>
             </div>
             <div>
@@ -236,4 +236,72 @@
     </footer>
 
   </body>
+  <script>
+  function getBookXML(str) {
+    var xhttp, xmlDoc, txt, title, i, author;
+
+    if(str.length < 10){
+      document.getElementById("title").value = "";
+      //document.getElementById("fillThis").innerHTML = "Invalid ISBN";
+      document.getElementById("comment").innerHTML = "Please finish filling in the ISBN field ...";
+      
+      //if the string is less than 10 characters, for whatever reason, make the fields writable
+      document.getElementById("title").readOnly = false;
+      
+      return;
+    }
+    else if(str.length > 10) //if the string is more than 10 characters, make the fields writable
+    {
+      document.getElementById("title").readOnly = false;
+    }
+    else
+    {
+      //document.getElementById("url").innerHTML = "isbn_api.php?q=" + str;
+      //make the fields read only
+      document.getElementById("title").readOnly = true;
+    }
+
+    xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function()
+    {
+      if(this.readyState == 4 && this.status == 200) //checks for response and OK status
+      {
+        xmlDoc = this.responseXML;
+
+        //grab title
+        title = xmlDoc.getElementsByTagName("title");
+        txt = "";
+
+        txt = txt + title[0].childNodes[0].nodeValue;
+
+
+        document.getElementById("title").value = txt;
+
+        //If the title value is empty, ie. error or nonexistent ISBN or book not in the ISBNapi database, 
+        //then make the field writable to allow the user to enter their own information manually
+        if(document.getElementById("title").value == "")
+        {
+          document.getElementById("title").readOnly = false;
+        }
+
+        //grab author
+        author = xmlDoc.getElementsByTagName("author_data");
+        txt = "";
+
+        txt = txt + author[0].childNodes[3].childNodes[0].nodeValue;
+
+        document.getElementById("author").value = txt;
+        
+        if(document.getElementById("author").value == "")
+        {
+          document.getElementById("author").readOnly = false;
+        }
+      }
+    };
+
+    xhttp.open("GET", "isbn_api.php?q=" + str, true); //AJAX opens the page dynamically
+    xhttp.send();
+  }
+
+  </script>
 </html>

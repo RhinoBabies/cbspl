@@ -312,21 +312,30 @@
 
 		public function add_book_to_nook($isbn, $title, $author, $condition, $gbsVal, $cost)
 		{
-			$this->conn = new mysqli($this->db_server, $this->db_username, $this->db_password, $this->db_name);
+			$this->login_db();
 
-			//check for book in pl_book table; if it's not there, it must be added first
-			/*
-				$sql = "SELECT * FROM `pl_book` WHERE `ISBN_10` = '" . $isbn . "' ";
+			$sql = "SELECT * FROM `pl_book` WHERE `ISBN_10` = '" . $isbn . "' ";
 
-				$result = $this->conn->query($sql);
-				if($result->num_rows > 0)
-					//book is already in the table;
-				else
-					//parse ISBN db for information here or on form?
-					//add book to pl_book
+			$result = $this->query_db($sql);
 
-				$result->close();
-			*/
+			if($result->num_rows > 0)
+				//book is already in the table;
+				echo "numrows: " . $result->num_rows;
+			else{
+				//add book to pl_book
+				echo $this->conn->error;
+				$sql = "INSERT INTO pl_book (ISBN_10, TITLE, AUTHOR) VALUES ('$isbn', '$title', '$author')";
+
+				if($this->query_db($sql))
+					echo "Adding book to nook...<br>";
+				else{
+					echo "Unable to add to nook...";
+					return $this->conn->error;
+				}
+
+			}
+
+			$result->close();
 
 			//then add book to pl_adds table with username
 

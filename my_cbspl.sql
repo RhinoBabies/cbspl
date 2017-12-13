@@ -43,6 +43,9 @@ CREATE TABLE `pl_adds` (
 LOCK TABLES `pl_adds` WRITE;
 /*!40000 ALTER TABLE `pl_adds` DISABLE KEYS */;
 INSERT INTO `pl_adds` VALUES ('Justin','1234657890','Well Used',0.00,1,NULL);
+INSERT INTO `pl_adds` VALUES ('Justy','0060652942','Well Used',0.00,1,NULL);
+INSERT INTO `pl_adds` VALUES ('Justy','0131103628','Lightly Used',1.00,3,NULL);
+INSERT INTO `pl_adds` VALUES ('Justy','0747549559','Lightly Used',0.00,1,NULL);
 /*!40000 ALTER TABLE `pl_adds` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -70,6 +73,8 @@ CREATE TABLE `pl_book` (
 
 LOCK TABLES `pl_book` WRITE;
 /*!40000 ALTER TABLE `pl_book` DISABLE KEYS */;
+INSERT INTO `pl_book` VALUES ('0060652942',NULL,'The abolition of man, or, Refl',NULL,'Lewis, C. S.',NULL);
+INSERT INTO `pl_book` VALUES ('0131103628',NULL,'The C programming language',NULL,'Kernighan, Brian W.',NULL);
 INSERT INTO `pl_book` VALUES ('0747549559',NULL,'Harry Potter and the Philosoph',NULL,'J.K. Rowling',NULL);
 INSERT INTO `pl_book` VALUES ('1234657890',NULL,'My favorite book',NULL,'Who knows',NULL);
 INSERT INTO `pl_book` VALUES ('4567981320',NULL,'Someone\'s book',NULL,'John Smith',NULL);
@@ -104,8 +109,9 @@ CREATE TABLE `pl_user` (
 
 LOCK TABLES `pl_user` WRITE;
 /*!40000 ALTER TABLE `pl_user` DISABLE KEYS */;
+INSERT INTO `pl_user` VALUES ('Jay','j005@cougars.csusm.edu','user-Jay@peer-library.com','$2y$10$IR2u5ansRUJXdSWQKdih7OUGaNjEctr2H531qs72/WKF2ngy3L8t.','0000-00-00',0,'$2y$10$F4beJ1IhmKoj4.bs4K7HL.qz0eNMXBJ4.jHE3BmwTsoYysz6Twg5q');
 INSERT INTO `pl_user` VALUES ('Justin','j005@csusm.edu','user-Justin@peer-library.org','Password','2017-11-14',0,'');
-INSERT INTO `pl_user` VALUES ('Justy','vesse005@cougars.csusm.edu','user-Justy@peer-library.com','$2y$10$Sqzt95Yi2pwJcqgFnDBwU.RjFCx57e9Qt5l2r6TPCRDiDHkWx6OAi','2017-12-12',1,'$2y$10$SaGxqet1xfgsAfjivDIEu.pEq2rqqzmicO7b4mtaWwrBC78rmobj2');
+INSERT INTO `pl_user` VALUES ('Justy','vesse005@cougars.csusm.edu','user-Justy@peer-library.com','$2y$10$Sqzt95Yi2pwJcqgFnDBwU.RjFCx57e9Qt5l2r6TPCRDiDHkWx6OAi','2017-12-13',1,'$2y$10$SaGxqet1xfgsAfjivDIEu.pEq2rqqzmicO7b4mtaWwrBC78rmobj2');
 INSERT INTO `pl_user` VALUES ('Kurt','shuma008@cougars.csusm.edu','user-Kurt@peer-library.com','$2y$10$o8TUvhecEsj4q6ab2jmCN.D8RVVLxWZ3P2auMtA3hAOC.XMupZ7m.','2017-12-03',1,'$2y$10$.odx4eNhshzRPmLB25W2lef/6.8FfGUMMVqzxs8iiRltWNXRrA6AW');
 INSERT INTO `pl_user` VALUES ('Newuser','newsies@some.com','user-Newuser@peer-library.org','qwerty','2017-11-13',0,'');
 INSERT INTO `pl_user` VALUES ('testSubject','abc@abc.com','user-testSubject@peer-library.org','12345','2017-11-13',0,'');
@@ -121,4 +127,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-13  0:50:19
+-- Dump completed on 2017-12-13  4:04:58
