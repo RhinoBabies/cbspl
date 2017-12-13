@@ -29,8 +29,11 @@ function getBookXML(str) {
 
 	}
 	else
+	{
 		document.getElementById("url").innerHTML = "isbn_api.php?q=" + str;
-
+		//make the fields read only
+		document.getElementById("title").readOnly = true;
+	}
 	xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function()
 	{
